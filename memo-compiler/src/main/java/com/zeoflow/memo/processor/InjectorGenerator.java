@@ -98,7 +98,7 @@ public class InjectorGenerator
                                 }
 
                                 ClassName componentClazz = ClassName.get(
-                                                annotatedClazz.packageName,
+                                        annotatedClazz.packageName,
                                         annotatedClazz.clazzName + COMPONENT_PREFIX
                                 );
                                 if (annotatedClazz.generatedClazzList.contains(annotatedFieldName))
@@ -117,7 +117,8 @@ public class InjectorGenerator
                                             variable.getSimpleName(),
                                             componentClazz
                                     );
-                                } else {
+                                } else
+                                {
                                     throw new VerifyException(String.format(
                                             "'%s' type can not be injected",
                                             variable.getSimpleName() + " " + variable.asType()

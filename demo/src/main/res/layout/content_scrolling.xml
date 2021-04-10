@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@color/background"
-  android:fillViewport="true">
-
-  <LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fillViewport="true">
 
-    <ListView
-      android:id="@+id/content_listView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      tools:itemCount="10"
-      tools:listitem="@layout/item_profile" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <Button
-      android:id="@+id/content_button"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="20dp"
-      android:background="@color/colorPrimary"
-      android:text="set profile"
-      android:textColor="@android:color/white" />
+        <ListView
+            android:id="@+id/content_listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_profile" />
 
-  </LinearLayout>
+        <Button
+            android:id="@+id/content_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:background="@color/colorPrimary"
+            android:text="set profile"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -3,29 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:background="@color/background">
+    android:paddingRight="20dp"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/item_profile_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/white"
-        tools:text="title"/>
+        tools:text="title" />
 
     <TextView
         android:id="@+id/item_profile_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:textColor="@color/secondTextColor"
         android:layout_marginTop="5dp"
-        tools:text="content"/>
+        android:textColor="@color/secondTextColor"
+        android:textSize="17sp"
+        tools:text="content" />
 
 </LinearLayout>

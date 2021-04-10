@@ -17,7 +17,6 @@
 package com.zeoflow.demo.entities;
 
 import com.zeoflow.demo.utils.SecurityUtils;
-import com.zeoflow.memo.annotation.EncryptEntity;
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.PreferenceEntity;
 import com.zeoflow.memo.annotation.PreferenceFunction;

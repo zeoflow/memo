@@ -39,7 +39,6 @@ import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.CHANG
 import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.getChangeListenerFieldName;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -171,7 +170,7 @@ public class PreferenceEntityGenerator
                                 .addAnnotation(NonNull.class)
                                 .build()
                 );
-        if(annotatedClazz.isEncryption)
+        if (annotatedClazz.isEncryption)
         {
             constructor.addStatement(
                     "$T.init().setEncryption(new $T($N)).build()",
