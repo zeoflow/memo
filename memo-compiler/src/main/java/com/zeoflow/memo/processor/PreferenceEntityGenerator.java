@@ -17,6 +17,7 @@
 package com.zeoflow.memo.processor;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.zeoflow.jx.file.ClassName;
 import com.zeoflow.jx.file.FieldSpec;
@@ -30,8 +31,12 @@ import com.zeoflow.memo.Memo;
 import com.zeoflow.memo.NoEncryption;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.util.Elements;
 
@@ -86,6 +91,7 @@ public class PreferenceEntityGenerator
                 .addTypes(getOnChangedTypeSpecs())
                 .addFields(getOnChangedFieldSpecs())
                 .addMethods(getFieldMethodSpecs())
+                .addMethods(getCompoundsGetter())
                 .addMethod(getClearMethodSpec())
                 .addMethod(getKeyNameListMethodSpec())
                 .addMethod(getEntityNameMethodSpec())
@@ -243,6 +249,73 @@ public class PreferenceEntityGenerator
                     methodSpecs.addAll(methodGenerator.getFieldMethods());
                 });
         return methodSpecs;
+    }
+
+    private List<MethodSpec> getCompoundsGetter()
+    {
+        List<MethodSpec> methodSpecs = new ArrayList<>();
+        for (Map.Entry<String[], ExecutableElement> entry : this.annotatedClazz.getterCompoundFunctionsList.entrySet())
+        {
+            methodSpecs.add(generateCompoundGetter(entry));
+        }
+        return methodSpecs;
+    }
+    private MethodSpec generateCompoundGetter(Map.Entry<String[], ExecutableElement> entry)
+    {
+        ExecutableElement element = entry.getValue();
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(
+                element.getSimpleName().toString()
+        ).addModifiers(PUBLIC);
+        builder.returns(TypeName.get(element.getReturnType()));
+        builder.addStatement("return " + getGetterStatement(element, entry.getKey()));
+        return builder.build();
+    }
+
+    private String getGetterStatement(ExecutableElement element, String[] params)
+    {
+        StringBuilder content = new StringBuilder("super." + element.getSimpleName().toString() + "(");
+        for(String param: params)
+        {
+            PreferenceKeyField preferenceParam = null;
+            for (PreferenceKeyField preferenceKeyField: this.annotatedClazz.keyFields)
+            {
+                if (preferenceKeyField.keyName.equals(param))
+                {
+                    preferenceParam = preferenceKeyField;
+                    break;
+                }
+            }
+            if(preferenceParam != null)
+            {
+                if (preferenceParam.value instanceof String)
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", \"")
+                            .append(preferenceParam.value)
+                            .append("\")");
+                } else if (preferenceParam.value instanceof Float)
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", ")
+                            .append(preferenceParam.value)
+                            .append("f)");
+                } else
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", ")
+                            .append(preferenceParam.value)
+                            .append(")");
+                }
+                content.append(", ");
+            } else {
+                // @todo-zeobot catch exception and alert the user that the field is invalid
+            }
+        }
+        content.delete(content.length() - 2, content.length());
+        return content + ")";
     }
 
     private MethodSpec getClearMethodSpec()

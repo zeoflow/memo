@@ -174,10 +174,11 @@ public class MainActivity extends Activity
             listView.setAdapter(adapter);
 
             adapter.addItem(new ItemProfile("Message", component.UserProfile().getUsername()));
-            adapter.addItem(new ItemProfile("Full Name", component.UserProfile().getUserinfo().getFirstName()));
+            adapter.addItem(new ItemProfile("Full Name", component.UserProfile().getFullName()));
             adapter.addItem(new ItemProfile("First Name", component.UserProfile().getUserinfo().getFirstName()));
             adapter.addItem(new ItemProfile("Last Name", component.UserProfile().getUserinfo().getLastName()));
             adapter.addItem(new ItemProfile("Views", component.UserProfile().getViews() + ""));
+            adapter.addItem(new ItemProfile("Details", component.UserProfile().getFullNameAndViews()));
             component.UserProfile().putViews(component.UserProfile().getViews());
 
             if (component.Country().getCountryCode() == null)
