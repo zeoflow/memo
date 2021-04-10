@@ -16,8 +16,6 @@
 
 package com.zeoflow.demo.entities;
 
-import com.zeoflow.demo.converters.BaseZsonConverter;
-import com.zeoflow.demo.converters.PrivateInfoConverter;
 import com.zeoflow.demo.models.Pet;
 import com.zeoflow.demo.models.PrivateInfo;
 import com.zeoflow.memo.annotation.KeyName;
@@ -25,7 +23,6 @@ import com.zeoflow.memo.annotation.Listener;
 import com.zeoflow.memo.annotation.Observable;
 import com.zeoflow.memo.annotation.PreferenceEntity;
 import com.zeoflow.memo.annotation.PreferenceFunction;
-import com.zeoflow.memo.annotation.TypeConverter;
 
 @PreferenceEntity("UserProfile")
 public class Profile
@@ -45,14 +42,12 @@ public class Profile
     protected final int visitCount = 1;
 
     @KeyName("userinfo")
-    @TypeConverter(value = PrivateInfoConverter.class)
     protected PrivateInfo privateInfo;
 
     /**
      * value used with zson.
      */
     @KeyName("userPet")
-    @TypeConverter(BaseZsonConverter.class)
     protected Pet userPetInfo;
 
     /**
