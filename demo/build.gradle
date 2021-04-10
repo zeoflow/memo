@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 30
+    defaultConfig {
+        applicationId "com.zeoflow.memo.demo"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0.0"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation("com.zeoflow:zson:1.3.0")
+    implementation("com.zeoflow:flow-kit:1.5.0")
+    implementation("com.zeoflow:material-elements:2.4.1")
+
+    implementation("com.zeoflow:parcelled-runtime:1.1.0")
+    annotationProcessor("com.zeoflow:parcelled-compiler:1.1.0")
+
+    implementation project(":memo-lib:memo")
+    implementation project(":memo-lib:annotation")
+    annotationProcessor project(":memo-lib:compiler")
+}
