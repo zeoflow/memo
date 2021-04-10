@@ -1,5 +1,5 @@
 # Memo
-Simple key-value storage and secured library built for Android
+Android processing and secured library for managing SharedPreferences as key-value elements persistence efficiently and structurally.
 
 ### 1. Depend on our library
 
