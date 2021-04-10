@@ -26,7 +26,7 @@ import com.zeoflow.jx.file.ParameterSpec;
 import com.zeoflow.jx.file.TypeName;
 import com.zeoflow.jx.file.TypeSpec;
 import com.zeoflow.memo.annotation.Encoder;
-import com.zeoflow.memo.annotation.PreferenceRoom;
+import com.zeoflow.memo.annotation.MemoStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,8 @@ import static javax.lang.model.element.Modifier.STATIC;
 public class PreferenceComponentGenerator
 {
 
-    private static final String CLAZZ_PREFIX = "_Storage";
-    private static final String ENTITY_PREFIX = "_Preference";
+    private static final String CLAZZ_PREFIX = "_Memo";
+    private static final String ENTITY_PREFIX = "_MemoEntity";
     private static final String FIELD_INSTANCE = "instance";
     private static final String CONSTRUCTOR_CONTEXT = "context";
     private static final String ENTITY_NAME_LIST = "EntityNameList";
@@ -241,7 +241,7 @@ public class PreferenceComponentGenerator
                 .forEach(
                         method ->
                         {
-                            ClassName preferenceRoom = ClassName.get(PreferenceRoom.class);
+                            ClassName preferenceRoom = ClassName.get(MemoStorage.class);
                             MethodSpec.Builder builder = MethodSpec.overriding(method);
                             MethodSpec methodSpec = builder
                                     .addStatement(

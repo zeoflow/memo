@@ -46,7 +46,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 public class PreferenceEntityGenerator
 {
 
-    private static final String CLAZZ_PREFIX = "_Preference";
+    private static final String CLAZZ_PREFIX = "_MemoEntity";
     private static final String FIELD_INSTANCE = "instance";
     private static final String FIELD_ENCRYPTION_KEY = "encryptionKey";
     private static final String CONSTRUCTOR_CONTEXT = "context";

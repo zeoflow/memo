@@ -16,7 +16,21 @@
 
 package com.zeoflow.memo.annotation;
 
-public interface PreferenceRoomImpl
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
+/**
+ * Marks a class as an default SharedPreference entity. This entity will be mapped the default
+ * SharedPreference persistence data.
+ */
+@Documented
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface DefaultMemo
 {
 
 }

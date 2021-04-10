@@ -23,8 +23,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zeoflow.app.Activity;
-import com.zeoflow.demo.components.AppComponent_Storage;
-import com.zeoflow.demo.entities.UserProfile_Preference;
+import com.zeoflow.demo.components.AppComponent_Memo;
+import com.zeoflow.demo.entities.UserProfile_MemoEntity;
 import com.zeoflow.demo.models.PrivateInfo;
 import com.zeoflow.memo.annotation.InjectPreference;
 
@@ -35,16 +35,16 @@ public class LoginActivity extends Activity
      * UserProfile entity. {@link com.zeoflow.demo.entities.Profile}
      */
     @InjectPreference
-    public AppComponent_Storage component;
+    public AppComponent_Memo component;
     @InjectPreference
-    public UserProfile_Preference userProfile;
+    public UserProfile_MemoEntity userProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        AppComponent_Storage.getInstance().inject(this);
+        AppComponent_Memo.getInstance().inject(this);
 
         final EditText editText_nick = findViewById(R.id.login_editText_nick);
         final EditText editText_age = findViewById(R.id.login_editText_age);
@@ -69,7 +69,7 @@ public class LoginActivity extends Activity
                         }
                     }
                 });
-        userProfile.addNicknameListeners(new UserProfile_Preference.NicknameIOnChangedListener()
+        userProfile.addNicknameListeners(new UserProfile_MemoEntity.NicknameIOnChangedListener()
         {
             @Override
             public void onChanged(String nickname)

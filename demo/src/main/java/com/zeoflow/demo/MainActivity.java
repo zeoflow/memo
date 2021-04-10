@@ -26,7 +26,7 @@ import androidx.core.view.ViewCompat;
 
 import com.zeoflow.app.Activity;
 import com.zeoflow.demo.components.AppComponent;
-import com.zeoflow.demo.components.AppComponent_Storage;
+import com.zeoflow.demo.components.AppComponent_Memo;
 import com.zeoflow.demo.entities.User;
 import com.zeoflow.demo.models.ItemProfile;
 import com.zeoflow.demo.utils.ListViewAdapter;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity
      * UserProfile Component. {@link AppComponent}
      */
     @InjectPreference
-    public AppComponent_Storage component;
+    public AppComponent_Memo component;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -49,7 +49,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppComponent_Storage.getInstance()
+        AppComponent_Memo.getInstance()
                 .inject(this);
 
         initializeUI();
