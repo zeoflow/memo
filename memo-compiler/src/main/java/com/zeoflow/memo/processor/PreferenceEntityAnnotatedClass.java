@@ -24,6 +24,7 @@ import com.zeoflow.jx.file.MethodSpec;
 import com.zeoflow.jx.file.TypeName;
 import com.zeoflow.memo.annotation.DefaultMemo;
 import com.zeoflow.memo.annotation.EncryptEntity;
+import com.zeoflow.memo.annotation.MemoCompoundFunction;
 import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 
@@ -58,6 +59,7 @@ public class PreferenceEntityAnnotatedClass
     public final Map<String, PreferenceKeyField> keyFieldMap;
     public final Map<String, Element> setterFunctionsList;
     public final Map<String, Element> getterFunctionsList;
+    public final Map<String[], ExecutableElement> getterCompoundFunctionsList;
     public boolean isDefaultPreference = false;
     public boolean isEncryption = false;
     public String encryptionKey = null;
@@ -84,6 +86,7 @@ public class PreferenceEntityAnnotatedClass
         this.keyFieldMap = new HashMap<>();
         this.setterFunctionsList = new HashMap<>();
         this.getterFunctionsList = new HashMap<>();
+        this.getterCompoundFunctionsList = new HashMap<>();
 
         if (defaultMemo != null) isDefaultPreference = true;
         if (encryptEntity != null && !encryptEntity.value().isEmpty())
@@ -135,7 +138,16 @@ public class PreferenceEntityAnnotatedClass
                 .forEach(
                         function ->
                         {
+
                             MemoFunction annotation = function.getAnnotation(MemoFunction.class);
+                            if (function.getAnnotation(MemoCompoundFunction.class) != null)
+                            {
+                                throw new VerifyException(
+                                        String.format(
+                                                "Function %s should not contain both @MemoFunction and @MemoCompoundFunction annotations",
+                                                function.getSimpleName())
+                                );
+                            }
                             String keyName = annotation.value();
                             if (keyNameFields.contains(keyName))
                             {
@@ -149,13 +161,14 @@ public class PreferenceEntityAnnotatedClass
                                 {
                                     throw new VerifyException(
                                             String.format(
-                                                    "MemoFunction's prefix should startWith 'get' or 'put' : %s",
+                                                    "MemoFunction's prefix should start with 'get' or 'put' : %s",
                                                     function.getSimpleName()));
                                 }
                             } else
                             {
                                 throw new VerifyException(
-                                        String.format("keyName '%s' is not exist in entity.", keyName));
+                                        String.format("keyName '%s' does not exist in entity the current entity for the '%s' function.", keyName, function.getSimpleName())
+                                );
                             }
 
                             MethodSpec methodSpec = MethodSpec.overriding((ExecutableElement) function).build();
@@ -178,6 +191,79 @@ public class PreferenceEntityAnnotatedClass
                                         String.format(
                                                 "method '%s''s return type should be %s.",
                                                 methodSpec.name, keyFieldMap.get(keyName).typeName));
+                            }
+                        });
+
+        annotatedElement.getEnclosedElements().stream()
+                .filter(
+                        function ->
+                                !function.getKind().isField()
+                                        && function.getModifiers().contains(Modifier.PUBLIC)
+                                        && function.getAnnotation(MemoCompoundFunction.class) != null)
+                .forEach(
+                        function ->
+                        {
+                            MemoCompoundFunction annotation = function.getAnnotation(MemoCompoundFunction.class);
+                            if (function.getAnnotation(MemoFunction.class) != null)
+                            {
+                                throw new VerifyException(
+                                        String.format(
+                                                "Function %s should not contain both @MemoFunction and @MemoCompoundFunction annotations",
+                                                function.getSimpleName())
+                                );
+                            }
+                            String[] keyNames = annotation.values();
+                            int parameters = 0;
+                            for (String keyName : keyNames)
+                            {
+                                parameters++;
+                                if (keyNameFields.contains(keyName))
+                                {
+                                    if (function.getSimpleName().toString().startsWith(GETTER_PREFIX))
+                                    {
+                                        if (!getterCompoundFunctionsList.containsKey(keyNames))
+                                        {
+                                            getterCompoundFunctionsList.put(keyNames, (ExecutableElement) function);
+                                        }
+                                    } else
+                                    {
+                                        throw new VerifyException(
+                                                String.format(
+                                                        "MemoCompoundFunction's prefix should start only with 'get' : %s",
+                                                        function.getSimpleName()
+                                                ));
+                                    }
+                                } else
+                                {
+                                    throw new VerifyException(
+                                            String.format("keyName '%s' does not exist in entity the current entity for the '%s' function.", keyName, function.getSimpleName())
+                                    );
+                                }
+                            }
+
+                            MethodSpec methodSpec = MethodSpec.overriding((ExecutableElement) function).build();
+                            if (methodSpec.parameters.size() != parameters)
+                            {
+                                throw new VerifyException(String.format(
+                                        "MemoCompoundFunction ('%s') should have %s parameters instead of %s",
+                                        function.getSimpleName(),
+                                        parameters,
+                                        methodSpec.parameters.size()
+                                ));
+                            }
+                            int indexParams = 0;
+                            for (String keyName : keyNames)
+                            {
+                                if (!methodSpec.parameters.get(indexParams).type.equals(keyFieldMap.get(keyName).typeName))
+                                {
+                                    throw new VerifyException(String.format(
+                                            "MemoCompoundFunction ('%s') parameter '%s''s type should be %s.",
+                                            function.getSimpleName(),
+                                            methodSpec.parameters.get(indexParams).name,
+                                            keyFieldMap.get(keyName).typeName
+                                    ));
+                                }
+                                indexParams++;
                             }
                         });
     }

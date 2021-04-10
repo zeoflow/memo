@@ -218,11 +218,9 @@ public class PreferenceFieldMethodGenerator
             } else if (keyField.value instanceof Float)
             {
                 return "$N.get($S, $Lf)";
-//                return "$N." + getGetterTypeMethodName() + "($S, $Lf)";
             } else
             {
                 return "$N.get($S, $L)";
-//                return "$N." + getGetterTypeMethodName() + "($S, $L)";
             }
         }
     }
