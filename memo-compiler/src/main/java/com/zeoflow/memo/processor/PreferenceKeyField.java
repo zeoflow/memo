@@ -23,14 +23,13 @@ import com.zeoflow.jx.file.TypeName;
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.Listener;
 import com.zeoflow.memo.annotation.Observable;
-import com.zeoflow.memo.annotation.TypeConverter;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
-@SuppressWarnings({"WeakerAccess", "StringConcatenationInsideStringBufferAppend"})
+@SuppressWarnings({"WeakerAccess"})
 public class PreferenceKeyField
 {
 
@@ -42,8 +41,6 @@ public class PreferenceKeyField
     public String keyName;
     public Object value;
 
-    public String converter;
-    public String converterPackage;
     public boolean isObjectField = false;
     public boolean isObservable = false;
     public boolean isListener = false;
@@ -81,30 +78,6 @@ public class PreferenceKeyField
             isListener = true;
         }
 
-        if (this.isObjectField)
-        {
-            variableElement.getAnnotationMirrors().stream()
-                    .filter(
-                            annotationMirror ->
-                                    TypeName.get(annotationMirror.getAnnotationType())
-                                            .equals(TypeName.get(TypeConverter.class)))
-                    .forEach(
-                            annotationMirror ->
-                                    annotationMirror
-                                            .getElementValues()
-                                            .forEach(
-                                                    (type, value) ->
-                                                    {
-                                                        String[] split = value.getValue().toString().split("\\.");
-                                                        StringBuilder builder = new StringBuilder();
-                                                        for (int i = 0; i < split.length - 1; i++)
-                                                            builder.append(split[i] + ".");
-                                                        this.converterPackage =
-                                                                builder.toString().substring(0, builder.toString().length() - 1);
-                                                        this.converter = split[split.length - 1];
-                                                    }));
-        }
-
         if (variableElement.getModifiers().contains(Modifier.PRIVATE))
         {
             throw new IllegalAccessException(
@@ -116,7 +89,7 @@ public class PreferenceKeyField
         }
     }
 
-    private void setTypeStringName() throws IllegalAccessException
+    private void setTypeStringName()
     {
         if (this.typeName.equals(TypeName.BOOLEAN))
         {
@@ -133,12 +106,6 @@ public class PreferenceKeyField
         } else if (this.typeName.equals(TypeName.get(String.class)))
         {
             this.typeStringName = "String";
-        } else if (variableElement.getAnnotation(TypeConverter.class) == null)
-        {
-            throw new IllegalAccessException(
-                    String.format(
-                            "Field '%s' can not use %s type. \nObjects should be annotated with '@TypeConverter'.",
-                            variableElement.getSimpleName(), this.typeName.toString()));
         } else
         {
             this.typeStringName = "String";
