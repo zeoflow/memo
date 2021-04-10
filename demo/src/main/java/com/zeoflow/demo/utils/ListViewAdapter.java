@@ -24,7 +24,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.zeoflow.demo.R;
-import com.zeoflow.demo.models.ItemProfile;
 
 import java.util.ArrayList;
 import java.util.List;

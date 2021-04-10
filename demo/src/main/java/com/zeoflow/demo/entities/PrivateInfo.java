@@ -14,28 +14,36 @@
  * limitations under the License.
  */
 
-package com.zeoflow.demo.models;
+package com.zeoflow.demo.entities;
 
-public class ItemProfile
+import androidx.annotation.NonNull;
+
+public class PrivateInfo
 {
 
-    private final String title;
-    private final String content;
+    private final String firstName;
+    private final String lastName;
 
-    public ItemProfile(String title, String content)
+    public PrivateInfo(String firstName, String lastName)
     {
-        this.title = title;
-        this.content = content;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public String getTitle()
+    public String getFirstName()
     {
-        return title;
+        return firstName;
+    }
+    public String getLastName()
+    {
+        return lastName;
     }
 
-    public String getContent()
+    @NonNull
+    @Override
+    public String toString()
     {
-        return content;
+        return "firstName=" + firstName + ", " + "lastName=" + lastName;
     }
 
 }

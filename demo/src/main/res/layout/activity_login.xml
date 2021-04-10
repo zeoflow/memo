@@ -6,24 +6,37 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/login_editText_nick"
+        android:id="@+id/login_editText_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:hint="nickname"
+        android:hint="username"
         android:textColor="@android:color/white"
         android:textColorHint="@color/HintText"
         android:textSize="20sp" />
 
     <EditText
-        android:id="@+id/login_editText_age"
+        android:id="@+id/login_editText_firstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:hint="age"
-        android:inputType="number"
+        android:hint="first name"
+        android:inputType="text"
+        android:textColor="@android:color/white"
+        android:textColorHint="@color/HintText"
+        android:textSize="20sp" />
+
+    <EditText
+        android:id="@+id/login_editText_lastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:hint="last name"
+        android:inputType="text"
         android:textColor="@android:color/white"
         android:textColorHint="@color/HintText"
         android:textSize="20sp" />
@@ -35,7 +48,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@color/colorPrimary"
-        android:text="confirm"
+        android:text="create user"
         android:textColor="@android:color/white" />
 
 </LinearLayout>

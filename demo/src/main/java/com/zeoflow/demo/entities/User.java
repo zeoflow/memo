@@ -1,61 +1,76 @@
 package com.zeoflow.demo.entities;
-import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import com.zeoflow.memo.annotation.EncryptEntity;
+import com.zeoflow.memo.annotation.KeyName;
+import com.zeoflow.memo.annotation.Listener;
+import com.zeoflow.memo.annotation.MemoEntity;
+import com.zeoflow.memo.annotation.MemoFunction;
+import com.zeoflow.memo.annotation.Observable;
 
-import com.zeoflow.parcelled.Default;
-import com.zeoflow.parcelled.Parcelled;
-import com.zeoflow.parcelled.ParcelledVersion;
-
-import org.jetbrains.annotations.NotNull;
-
-@Parcelled(version = 1)
-public abstract class User implements Parcelable
+@MemoEntity("UserProfile")
+@EncryptEntity("G15y3aV9M8dHbmV4vC9EZmDxRgAoWd")
+public class User
 {
 
-    @Default(code = "0")
-    public int id;
+    @KeyName("username")
+    @Observable
+    protected final String userNickName = "zeoflow";
 
-    @Nullable
-    @Default(code = "null")
-    public String firstName;
+    /**
+     * key value will be 'Login'. (login's camel uppercase)
+     */
+    @Listener
+    protected final boolean login = false;
 
-    @ParcelledVersion(after = 1, before = 2)
-    @Nullable
-    public String lastName;
-    public static User create(
-            int id,
-            @NonNull String firstName,
-            @NonNull String lastName
-    )
+    @KeyName("views")
+    protected final int viewsCount = 1;
+
+    @KeyName("userinfo")
+    protected PrivateInfo privateInfo;
+
+    /**
+     * preference putter function about userNickName.
+     *
+     * @param nickname function in
+     *
+     * @return function out
+     */
+    @MemoFunction("username")
+    public String putUserNickFunction(String nickname)
     {
-        return new Parcelled_User(id, firstName, lastName);
+        return "Hello, " + nickname;
     }
 
-    @Override
-    public boolean equals(Object other)
+    /**
+     * preference getter function about userNickName.
+     *
+     * @param nickname function in
+     *
+     * @return function out
+     */
+    @MemoFunction("username")
+    public String getUserNickFunction(String nickname)
     {
-        if (this == other)
-        {
-            return true;
-        }
-
-        if (!(other instanceof User))
-        {
-            return false;
-        }
-
-        User o = (User) other;
-
-        return id == o.id;
+        return nickname + "!!!";
     }
 
-    @NotNull
-    @Override
-    public String toString()
+    /**
+     * preference putter function example about visitCount's auto increment.
+     *
+     * @param count function in
+     *
+     * @return function out
+     */
+    @MemoFunction("views")
+    public int putVisitCountFunction(int count)
     {
-        return "User{$ID}" + id;
+        return ++count;
+    }
+
+    @MemoFunction("fullName")
+    public String getFullName(String fullName)
+    {
+        return fullName;
     }
 
 }

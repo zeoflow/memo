@@ -16,45 +16,44 @@
 
 package com.zeoflow.demo.entities;
 
-import com.zeoflow.demo.utils.SecurityUtils;
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 
-@MemoEntity("UserDevice")
-public class Device
+@MemoEntity("Country")
+public class Country
 {
 
-    @KeyName("version")
-    public final String deviceVersion = null;
+    @KeyName("countryCode")
+    public final String countryCode = null;
 
-    @KeyName("uuid")
-    public final String userUUID = null;
+    @KeyName("country")
+    public final String countryName = "United Kingdom";
 
     /**
-     * preference putter function example about uuid with encrypt AES.
+     * preference putter function example toUpperCase().
      *
-     * @param uuid function in
+     * @param country function in
      *
      * @return function out
      */
-    @MemoFunction("uuid")
-    public String putUuidFunction(String uuid)
+    @MemoFunction("country")
+    public String putCountryFunction(String country)
     {
-        return SecurityUtils.encrypt(uuid);
+        return country.toUpperCase();
     }
 
     /**
-     * preference putter function example about uuid with decrypt AES.
+     * preference putter function example toLowerCase().
      *
-     * @param uuid function in
+     * @param country function in
      *
      * @return function out
      */
-    @MemoFunction("uuid")
-    public String getUuidFunction(String uuid)
+    @MemoFunction("country")
+    public String getCountryFunction(String country)
     {
-        return SecurityUtils.decrypt(uuid);
+        return country.toLowerCase();
     }
 
 }
