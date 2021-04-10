@@ -24,23 +24,19 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Marks a class as an SharedPreference data. This class will have a mapping SharedPreference with
- * Upper camel case.
+ * Marks a class as a component of PreferenceRooms.
  */
 @Documented
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface PreferenceEntity
+public @interface MemoComponent
 {
 
     /**
-     * Preference entity name of the SharedPreference persistence. w
+     * Declaring the entities for the component.
      *
-     * <p>If not used, the class generated entity class name will be upper camel case of the class
-     * name.
-     *
-     * @return The Preference name of the SharedPreference entity.
+     * @return entity classes.
      */
-    String value() default "";
+    Class<?>[] entities() default {};
 
 }

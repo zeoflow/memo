@@ -20,7 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("TryWithIdenticalCatches")
-public class PreferenceRoom
+public class MemoStorage
 {
 
     private static final String CLAZZ_PREFIX = "_Injector";

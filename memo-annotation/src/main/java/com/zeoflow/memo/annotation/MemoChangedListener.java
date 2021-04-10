@@ -16,27 +16,12 @@
 
 package com.zeoflow.memo.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
- * Marks a class as a component of PreferenceRooms.
+ * MemoChangedListener is an interface of the listening for
+ *
+ * <p>SharedPreference persistence's value changes.
  */
-@Documented
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface PreferenceComponent
+public interface MemoChangedListener
 {
-
-    /**
-     * Declaring the entities for the component.
-     *
-     * @return entity classes.
-     */
-    Class<?>[] entities() default {};
 
 }

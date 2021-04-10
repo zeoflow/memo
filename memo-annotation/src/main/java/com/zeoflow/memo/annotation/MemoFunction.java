@@ -20,17 +20,23 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.CLASS;
 
 /**
- * Marks a class as an default SharedPreference entity. This entity will be mapped the default
- * SharedPreference persistence data.
+ * Marks a class as a field's getter or putter function.
  */
 @Documented
-@Target(TYPE)
-@Retention(RUNTIME)
-public @interface DefaultPreference
+@Target(METHOD)
+@Retention(CLASS)
+public @interface MemoFunction
 {
+
+    /**
+     * Set preference getter or putter function to key in the SharedPreference.
+     *
+     * @return The Preference key name of the SharedPreference.
+     */
+    String value();
 
 }
