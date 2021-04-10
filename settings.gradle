@@ -1,0 +1,114 @@
+import groovy.transform.Field
+
+enum BuildType {
+    MAIN,
+    COMPOSE,
+    FLAN,
+    MEDIA,
+    WEAR,
+}
+
+private String getRequestedProjectSubsetName() {
+    if (startParameter.projectProperties.containsKey("com.zeoflow.projects")) {
+        return startParameter.projectProperties["com.zeoflow.projects"].toUpperCase()
+    }
+    if (System.getenv().containsKey("COM_ZEOFLOW_PROJECTS")) {
+        return System.getenv()["COM_ZEOFLOW_PROJECTS"].toUpperCase()
+    }
+    return null
+}
+
+private Set<BuildType> createRequestedFilter() {
+    Set<BuildType> filter = new HashSet<>()
+    String projectSubsetName = getRequestedProjectSubsetName()
+    if (projectSubsetName == null) return null
+    String[] requestedFilter = projectSubsetName.split(",")
+    for (String requestedType : requestedFilter) {
+        switch (requestedType) {
+            case "MAIN":
+                filter.add(BuildType.MAIN)
+                break
+            case "COMPOSE":
+                filter.add(BuildType.COMPOSE)
+                break
+            case "FLAN":
+                filter.add(BuildType.FLAN)
+                break
+            case "MEDIA":
+                filter.add(BuildType.MEDIA)
+            case "WEAR":
+                filter.add(BuildType.WEAR)
+                break
+            case "ALL":
+                // Return null so that no filtering is done
+                return null
+                break
+            default:
+                throw new Exception("Unsupported project type $requestedType\n" +
+                        "We only support the following:\n" +
+                        "ALL     - all com.zeoflow projects\n" +
+                        "COMPOSE - compose projects\n" +
+                        "MAIN    - com.zeoflow projects that are not compose\n" +
+                        "FLAN    - fragment, lifecycle, activity, and navigation projects\n" +
+                        "MEDIA   - media, media2, and mediarouter projects\n" +
+                        "WEAR    - Wear OS projects")
+        }
+    }
+    return filter
+}
+
+/**
+ * Requested project filter based on STUDIO_PROJECT_FILTER env variable.
+ *
+ * Note that null value means all the projects should be included
+ */
+@Field
+Set<BuildType> requestedFilter
+requestedFilter = createRequestedFilter()
+
+boolean shouldIncludeForFilter(List<BuildType> includeList) {
+    if (includeList.empty) return true
+    if (requestedFilter == null) return true
+    for (BuildType type : includeList) {
+        if (requestedFilter.contains(type)) return true
+    }
+    return false
+}
+
+// Calling includeProject(name, filePath) is shorthand for:
+//
+//   include(name)
+//   project(name).projectDir = new File(filePath)
+//
+// Note that <name> directly controls the Gradle project name, and also indirectly sets:
+//   the project name in the IDE
+//   the Maven artifactId
+def includeProject(name, filePath, List<BuildType> filter = []) {
+    if (!shouldIncludeForFilter(filter)) return
+    settings.include(name)
+
+    def file
+    if (filePath instanceof String) {
+        file = new File(rootDir, filePath)
+    } else {
+        file = filePath
+    }
+    project(name).projectDir = file
+    if (!file.exists()) {
+        // This option is supported so that development/simplify_build_failure.sh can try
+        // deleting entire projects at once to identify the cause of a build failure
+        if (System.getenv("ALLOW_MISSING_PROJECTS") == null) {
+            throw new Exception("Path " + file + " does not exist; cannot include project " + name)
+        }
+    }
+}
+
+// Demo Project
+includeProject(":demo", "demo")
+
+// Memo Components
+includeProject(":memo-lib:memo", "memo")
+includeProject(":memo-lib:annotation", "memo-annotation")
+includeProject(":memo-lib:compiler", "memo-compiler")
+
+rootProject.name = "Memo"

@@ -1,5 +1,5 @@
 # memo
-Android secured, simple key-value storage library built for Android
+Simple key-value storage and secured library built for Android
 
 ## 🏆 Contributors 🏆
 
