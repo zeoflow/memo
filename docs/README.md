@@ -22,11 +22,11 @@ To use it:
 dependencies {
     // ...
 
-    // parcelled version
+    // declare memo version
     def memo_version = "1.0.0"
 
     // Memo Library
-    implementation("com.zeoflow:memo:$parcelled_version")
+    implementation("com.zeoflow:memo:$memo_version")
     // Required if you want to use the injector
     implementation("com.zeoflow:memo-annotation:$memo_version")
     annotationProcessor("com.zeoflow:memo-compiler:$memo_version")
