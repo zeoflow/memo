@@ -51,12 +51,7 @@ public class PreferenceEntityGenerator
     private static final String FIELD_ENCRYPTION_KEY = "encryptionKey";
     private static final String CONSTRUCTOR_CONTEXT = "context";
     private static final String KEY_NAME_LIST = "keyNameList";
-    private static final String EDIT_METHOD = "edit()";
-    private static final String CLEAR_METHOD = "clear()";
-    private static final String APPLY_METHOD = "apply()";
     private static final String PACKAGE_CONTEXT = "android.content.Context";
-    private static final String PACKAGE_SHAREDPREFERENCE = "android.content.SharedPreferences";
-    private static final String PACKAGE_PREFERENCEMANAGER = "android.preference.PreferenceManager";
     private final PreferenceEntityAnnotatedClass annotatedClazz;
     private final Elements annotatedElementUtils;
 
@@ -402,16 +397,6 @@ public class PreferenceEntityGenerator
     private TypeName getContextPackageType()
     {
         return TypeName.get(annotatedElementUtils.getTypeElement(PACKAGE_CONTEXT).asType());
-    }
-
-    private TypeName getSharedPreferencesPackageType()
-    {
-        return TypeName.get(annotatedElementUtils.getTypeElement(PACKAGE_SHAREDPREFERENCE).asType());
-    }
-
-    private TypeName getPreferenceManagerPackageType()
-    {
-        return TypeName.get(annotatedElementUtils.getTypeElement(PACKAGE_PREFERENCEMANAGER).asType());
     }
 
     private ClassName getMutableLiveDataClass()
