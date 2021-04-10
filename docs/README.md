@@ -218,6 +218,82 @@ public class User
 }
 ```
 
+#### 3.2 Helper Class for Memo's injector
+Create injector class
+```java
+/**
+ * Component that integrates memo entities; it must be an interface
+ * and annotated with @MemoComponent. The generated class will end in
+ * $_Memo (generated class for this interface will be AppStorage_Memo
+ *
+ * inside this Memo manager, the following MemoEntities are injected:
+ * - User
+ * - Country
+ */
+@MemoComponent(entities = {User.class, Country.class})
+public interface AppStorage
+{
+
+    /**
+     * declare dependency injection target MaiActivity.
+     */
+    void inject(MainActivity mainActivity);
+
+    /**
+     * declare dependency injection target LoginActivity.
+     */
+    void inject(LoginActivity loginActivity);
+
+}
+```
+
+Create variables that needs to be injected by the `AppStorage_Memo`
+```java
+@InjectPreference
+public AppStorage_Memo component;
+@InjectPreference
+public UserProfile_MemoEntity userProfile;
+```
+
+Inject `MainActivity` in the `AppStorage_Memo`
+```java
+AppStorage_Memo.getInstance().inject((MainActivity) this);
+```
+
+Access MemoEntity from Memo Component
+```java
+component.userProfile();
+```
+
+Put value inside `userProfile`
+```java
+userProfile.putUsername(inputUsername);
+```
+
+Add change listener for login
+```java
+userProfile.addLoginListeners(new UserProfile_MemoEntity.LoginIOnChangedListener()
+{
+    @Override
+    public void onChanged(boolean login)
+    {
+        // do something
+    }
+});
+```
+
+Add observable for the username field
+```java
+component.userProfile().usernameObserver((LifecycleOwner) this, new Observer<String>()
+{
+    @Override
+    public void onChanged(String username)
+    {
+        // do something here
+    }
+});
+```
+
 ## License
     Copyright (C) 2021 ZeoFlow S.R.L.
     
