@@ -21,3 +21,5 @@ dependencies {
     api "androidx.annotation:annotation:1.2.0"
     implementation project(":memo-lib:memo")
 }
+
+apply from: "${rootProject.projectDir}/buildSrc/upload.gradle"
