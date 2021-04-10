@@ -37,7 +37,7 @@ public class MainActivity extends Activity
 {
 
     /**
-     * UserProfile Component. {@link AppStorage}
+     * userProfile Component. {@link AppStorage}
      */
     @InjectPreference
     public AppStorage_Memo component;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity
 
         initializeUI();
 
-        component.UserProfile().usernameObserver(this, nickname -> initializeUI());
+        component.userProfile().usernameObserver(this, nickname -> initializeUI());
 
 //        memoExample();
     }
@@ -154,7 +154,7 @@ public class MainActivity extends Activity
 
     private void initializeUI()
     {
-        if (!component.UserProfile().getLogin())
+        if (!component.userProfile().getLogin())
         {
             Toast.makeText(zContext, "No user registered. Please register one.", Toast.LENGTH_SHORT).show();
             configureNewActivity(LoginActivity.class)
@@ -173,21 +173,21 @@ public class MainActivity extends Activity
             ViewCompat.setNestedScrollingEnabled(listView, true);
             listView.setAdapter(adapter);
 
-            adapter.addItem(new ItemProfile("Message", component.UserProfile().getUsername()));
-            adapter.addItem(new ItemProfile("Full Name", component.UserProfile().getFullName()));
-            adapter.addItem(new ItemProfile("First Name", component.UserProfile().getUserinfo().getFirstName()));
-            adapter.addItem(new ItemProfile("Last Name", component.UserProfile().getUserinfo().getLastName()));
-            adapter.addItem(new ItemProfile("Views", component.UserProfile().getViews() + ""));
-            adapter.addItem(new ItemProfile("Details", component.UserProfile().getFullNameAndViews()));
-            component.UserProfile().putViews(component.UserProfile().getViews());
+            adapter.addItem(new ItemProfile("Message", component.userProfile().getUsername()));
+            adapter.addItem(new ItemProfile("Full Name", component.userProfile().getFullName()));
+            adapter.addItem(new ItemProfile("First Name", component.userProfile().getUserinfo().getFirstName()));
+            adapter.addItem(new ItemProfile("Last Name", component.userProfile().getUserinfo().getLastName()));
+            adapter.addItem(new ItemProfile("Views", component.userProfile().getViews() + ""));
+            adapter.addItem(new ItemProfile("Details", component.userProfile().getFullNameAndViews()));
+            component.userProfile().putViews(component.userProfile().getViews());
 
-            if (component.Country().getCountryCode() == null)
+            if (component.country().getCountryCode() == null)
             {
-                component.Country().putCountry("Romania");
-                component.Country().putCountryCode("RO");
+                component.country().putCountry("Romania");
+                component.country().putCountryCode("RO");
             }
-            adapter.addItem(new ItemProfile("country", component.Country().getCountry()));
-            adapter.addItem(new ItemProfile("country code", component.Country().getCountryCode()));
+            adapter.addItem(new ItemProfile("country", component.country().getCountry()));
+            adapter.addItem(new ItemProfile("country code", component.country().getCountryCode()));
         }
     }
 

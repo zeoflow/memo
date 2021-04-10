@@ -185,7 +185,7 @@ public class PreferenceComponentGenerator
                 {
                     String fieldName = getEntityInstanceFieldName(keyName);
                     MethodSpec instance =
-                            MethodSpec.methodBuilder(StringUtils.toUpperCamel(keyName))
+                            MethodSpec.methodBuilder(StringUtils.toLowerCamel(keyName))
                                     .addModifiers(PUBLIC)
                                     .addStatement("return $N", fieldName)
                                     .returns(getEntityClassType(annotatedEntityMap.get(keyName)))
