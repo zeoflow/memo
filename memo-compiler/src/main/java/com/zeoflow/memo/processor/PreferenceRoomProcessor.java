@@ -24,11 +24,11 @@ import com.zeoflow.jx.file.MethodSpec;
 import com.zeoflow.jx.file.ParameterSpec;
 import com.zeoflow.jx.file.TypeSpec;
 import com.zeoflow.memo.MemoApplication;
-import com.zeoflow.memo.annotation.DefaultPreference;
+import com.zeoflow.memo.annotation.DefaultMemo;
 import com.zeoflow.memo.annotation.InjectPreference;
 import com.zeoflow.memo.annotation.KeyName;
-import com.zeoflow.memo.annotation.PreferenceComponent;
-import com.zeoflow.memo.annotation.PreferenceEntity;
+import com.zeoflow.memo.annotation.MemoComponent;
+import com.zeoflow.memo.annotation.MemoEntity;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -76,9 +76,9 @@ public class PreferenceRoomProcessor extends AbstractProcessor
     public Set<String> getSupportedAnnotationTypes()
     {
         Set<String> supportedTypes = new HashSet<>();
-        supportedTypes.add(PreferenceComponent.class.getCanonicalName());
-        supportedTypes.add(PreferenceEntity.class.getCanonicalName());
-        supportedTypes.add(DefaultPreference.class.getCanonicalName());
+        supportedTypes.add(MemoComponent.class.getCanonicalName());
+        supportedTypes.add(MemoEntity.class.getCanonicalName());
+        supportedTypes.add(DefaultMemo.class.getCanonicalName());
         supportedTypes.add(KeyName.class.getCanonicalName());
         supportedTypes.add(InjectPreference.class.getCanonicalName());
         return supportedTypes;
@@ -98,7 +98,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
             return true;
         }
 
-        roundEnv.getElementsAnnotatedWith(PreferenceEntity.class).stream()
+        roundEnv.getElementsAnnotatedWith(MemoEntity.class).stream()
                 .map(annotatedType -> (TypeElement) annotatedType)
                 .forEach(
                         annotatedType ->
@@ -113,7 +113,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
                             }
                         });
 
-        roundEnv.getElementsAnnotatedWith(PreferenceComponent.class).stream()
+        roundEnv.getElementsAnnotatedWith(MemoComponent.class).stream()
                 .map(annotatedType -> (TypeElement) annotatedType)
                 .forEach(
                         annotatedType ->
@@ -265,7 +265,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
     {
         if (!annotatedType.getKind().isClass())
         {
-            throw new IllegalAccessException("Only classes can be annotated with @PreferenceRoom");
+            throw new IllegalAccessException("Only classes can be annotated with @MemoStorage");
         } else if (annotatedType.getModifiers().contains(Modifier.FINAL))
         {
             showErrorLog("class modifier should not be final", annotatedType);
@@ -280,7 +280,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
     {
         if (annotatedEntityMap.containsKey(annotatedClazz.entityName))
         {
-            throw new VerifyException("@PreferenceRoom key value is duplicated.");
+            throw new VerifyException("@MemoStorage key value is duplicated.");
         } else
         {
             annotatedEntityMap.put(annotatedClazz.entityName, annotatedClazz);
@@ -293,7 +293,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
     {
         if (annotatedComponentList.contains(annotatedClazz))
         {
-            throw new VerifyException("@PreferenceComponent is duplicated.");
+            throw new VerifyException("@MemoComponent is duplicated.");
         } else
         {
             annotatedComponentList.add(annotatedClazz);
@@ -305,7 +305,7 @@ public class PreferenceRoomProcessor extends AbstractProcessor
         if (!annotatedType.getKind().isInterface())
         {
             throw new IllegalAccessException(
-                    "Only interfaces can be annotated with @PreferenceComponent");
+                    "Only interfaces can be annotated with @MemoComponent");
         }
     }
 

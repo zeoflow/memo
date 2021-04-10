@@ -18,10 +18,10 @@ package com.zeoflow.demo.entities;
 
 import com.zeoflow.demo.utils.SecurityUtils;
 import com.zeoflow.memo.annotation.KeyName;
-import com.zeoflow.memo.annotation.PreferenceEntity;
-import com.zeoflow.memo.annotation.PreferenceFunction;
+import com.zeoflow.memo.annotation.MemoEntity;
+import com.zeoflow.memo.annotation.MemoFunction;
 
-@PreferenceEntity("UserDevice")
+@MemoEntity("UserDevice")
 public class Device
 {
 
@@ -38,7 +38,7 @@ public class Device
      *
      * @return function out
      */
-    @PreferenceFunction("uuid")
+    @MemoFunction("uuid")
     public String putUuidFunction(String uuid)
     {
         return SecurityUtils.encrypt(uuid);
@@ -51,7 +51,7 @@ public class Device
      *
      * @return function out
      */
-    @PreferenceFunction("uuid")
+    @MemoFunction("uuid")
     public String getUuidFunction(String uuid)
     {
         return SecurityUtils.decrypt(uuid);

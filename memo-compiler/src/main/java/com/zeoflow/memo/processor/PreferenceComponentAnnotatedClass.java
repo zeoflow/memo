@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import com.google.common.base.VerifyException;
 import com.zeoflow.jx.file.MethodSpec;
 import com.zeoflow.jx.file.TypeName;
-import com.zeoflow.memo.annotation.PreferenceComponent;
+import com.zeoflow.memo.annotation.MemoComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ import javax.lang.model.util.Elements;
 public class PreferenceComponentAnnotatedClass
 {
 
-    private static final String ENTITY_PREFIX = "_Preference";
+    private static final String ENTITY_PREFIX = "_MemoEntity";
 
     public final String packageName;
     public final TypeElement annotatedElement;
@@ -93,7 +93,7 @@ public class PreferenceComponentAnnotatedClass
                 .filter(
                         annotationMirror ->
                                 TypeName.get(annotationMirror.getAnnotationType())
-                                        .equals(TypeName.get(PreferenceComponent.class)))
+                                        .equals(TypeName.get(MemoComponent.class)))
                 .forEach(
                         annotationMirror ->
                                 annotationMirror

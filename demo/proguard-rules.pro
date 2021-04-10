@@ -20,4 +20,4 @@
 # hide the original source file value.
 #-renamesourcefileattribute SourceFile
 
--keep public class * implements com.zeoflow.memo.annotation.PreferenceRoomImpl { *; }
+-keep public class * implements com.zeoflow.memo.annotation.MemoStorageImpl { *; }

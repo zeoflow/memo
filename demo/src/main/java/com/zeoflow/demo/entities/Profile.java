@@ -20,11 +20,11 @@ import com.zeoflow.demo.models.Pet;
 import com.zeoflow.demo.models.PrivateInfo;
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.Listener;
+import com.zeoflow.memo.annotation.MemoFunction;
 import com.zeoflow.memo.annotation.Observable;
-import com.zeoflow.memo.annotation.PreferenceEntity;
-import com.zeoflow.memo.annotation.PreferenceFunction;
+import com.zeoflow.memo.annotation.MemoEntity;
 
-@PreferenceEntity("UserProfile")
+@MemoEntity("UserProfile")
 public class Profile
 {
 
@@ -57,7 +57,7 @@ public class Profile
      *
      * @return function out
      */
-    @PreferenceFunction("nickname")
+    @MemoFunction("nickname")
     public String putUserNickFunction(String nickname)
     {
         return "Hello, " + nickname;
@@ -70,7 +70,7 @@ public class Profile
      *
      * @return function out
      */
-    @PreferenceFunction("nickname")
+    @MemoFunction("nickname")
     public String getUserNickFunction(String nickname)
     {
         return nickname + "!!!";
@@ -83,7 +83,7 @@ public class Profile
      *
      * @return function out
      */
-    @PreferenceFunction("visits")
+    @MemoFunction("visits")
     public int putVisitCountFunction(int count)
     {
         return ++count;

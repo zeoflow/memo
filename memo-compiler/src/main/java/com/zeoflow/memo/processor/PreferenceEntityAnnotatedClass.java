@@ -22,10 +22,10 @@ import com.google.common.base.Strings;
 import com.google.common.base.VerifyException;
 import com.zeoflow.jx.file.MethodSpec;
 import com.zeoflow.jx.file.TypeName;
-import com.zeoflow.memo.annotation.DefaultPreference;
+import com.zeoflow.memo.annotation.DefaultMemo;
 import com.zeoflow.memo.annotation.EncryptEntity;
-import com.zeoflow.memo.annotation.PreferenceEntity;
-import com.zeoflow.memo.annotation.PreferenceFunction;
+import com.zeoflow.memo.annotation.MemoEntity;
+import com.zeoflow.memo.annotation.MemoFunction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +66,8 @@ public class PreferenceEntityAnnotatedClass
             @NonNull TypeElement annotatedElement, @NonNull Elements elementUtils)
             throws VerifyException
     {
-        PreferenceEntity preferenceEntity = annotatedElement.getAnnotation(PreferenceEntity.class);
-        DefaultPreference defaultPreference = annotatedElement.getAnnotation(DefaultPreference.class);
+        MemoEntity memoEntity = annotatedElement.getAnnotation(MemoEntity.class);
+        DefaultMemo defaultMemo = annotatedElement.getAnnotation(DefaultMemo.class);
         EncryptEntity encryptEntity = annotatedElement.getAnnotation(EncryptEntity.class);
         PackageElement packageElement = elementUtils.getPackageOf(annotatedElement);
         this.packageName =
@@ -76,16 +76,16 @@ public class PreferenceEntityAnnotatedClass
         this.typeName = TypeName.get(annotatedElement.asType());
         this.clazzName = annotatedElement.getSimpleName().toString();
         this.entityName =
-                Strings.isNullOrEmpty(preferenceEntity.value())
+                Strings.isNullOrEmpty(memoEntity.value())
                         ? StringUtils.toUpperCamel(this.clazzName)
-                        : preferenceEntity.value();
+                        : memoEntity.value();
         this.keyFields = new ArrayList<>();
         this.keyNameFields = new ArrayList<>();
         this.keyFieldMap = new HashMap<>();
         this.setterFunctionsList = new HashMap<>();
         this.getterFunctionsList = new HashMap<>();
 
-        if (defaultPreference != null) isDefaultPreference = true;
+        if (defaultMemo != null) isDefaultPreference = true;
         if (encryptEntity != null && !encryptEntity.value().isEmpty())
         {
             isEncryption = true;
@@ -94,7 +94,7 @@ public class PreferenceEntityAnnotatedClass
 
         if (Strings.isNullOrEmpty(entityName))
         {
-            throw new VerifyException("You should entity PreferenceRoom class value.");
+            throw new VerifyException("You should entity MemoStorage class value.");
         }
 
         Map<String, String> checkMap = new HashMap<>();
@@ -131,11 +131,11 @@ public class PreferenceEntityAnnotatedClass
                         function ->
                                 !function.getKind().isField()
                                         && function.getModifiers().contains(Modifier.PUBLIC)
-                                        && function.getAnnotation(PreferenceFunction.class) != null)
+                                        && function.getAnnotation(MemoFunction.class) != null)
                 .forEach(
                         function ->
                         {
-                            PreferenceFunction annotation = function.getAnnotation(PreferenceFunction.class);
+                            MemoFunction annotation = function.getAnnotation(MemoFunction.class);
                             String keyName = annotation.value();
                             if (keyNameFields.contains(keyName))
                             {
@@ -149,7 +149,7 @@ public class PreferenceEntityAnnotatedClass
                                 {
                                     throw new VerifyException(
                                             String.format(
-                                                    "PreferenceFunction's prefix should startWith 'get' or 'put' : %s",
+                                                    "MemoFunction's prefix should startWith 'get' or 'put' : %s",
                                                     function.getSimpleName()));
                                 }
                             } else
@@ -161,7 +161,7 @@ public class PreferenceEntityAnnotatedClass
                             MethodSpec methodSpec = MethodSpec.overriding((ExecutableElement) function).build();
                             if (methodSpec.parameters.size() != 1)
                             {
-                                throw new VerifyException("PreferenceFunction should has one parameter");
+                                throw new VerifyException("MemoFunction should has one parameter");
                             } else if (!methodSpec
                                     .parameters
                                     .get(0)

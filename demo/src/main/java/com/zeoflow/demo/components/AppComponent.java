@@ -20,12 +20,12 @@ import com.zeoflow.demo.LoginActivity;
 import com.zeoflow.demo.MainActivity;
 import com.zeoflow.demo.entities.Device;
 import com.zeoflow.demo.entities.Profile;
-import com.zeoflow.memo.annotation.PreferenceComponent;
+import com.zeoflow.memo.annotation.MemoComponent;
 
 /**
  * Component integrates entities.
  */
-@PreferenceComponent(entities = {Profile.class, Device.class})
+@MemoComponent(entities = {Profile.class, Device.class})
 public interface AppComponent
 {
 
