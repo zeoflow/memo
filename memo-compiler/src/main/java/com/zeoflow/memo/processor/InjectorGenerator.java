@@ -80,7 +80,8 @@ public class InjectorGenerator
                         .addParameter(
                                 ParameterSpec.builder(TypeName.get(injectedElement.asType()), INJECT_OBJECT)
                                         .addAnnotation(NonNull.class)
-                                        .build());
+                                        .build()
+                        );
         injectedElement.getEnclosedElements().stream()
                 .filter(variable -> variable instanceof VariableElement)
                 .map(variable -> (VariableElement) variable)
@@ -103,11 +104,12 @@ public class InjectorGenerator
                                 );
                                 if (annotatedClazz.generatedClazzList.contains(annotatedFieldName))
                                 {
+                                    String className = StringUtils.toLowerCamel(annotatedFieldName.replace(PREFERENCE_PREFIX, ""));
                                     builder.addStatement(
                                             INJECT_OBJECT + ".$N = $T.getInstance().$N()",
                                             variable.getSimpleName(),
                                             componentClazz,
-                                            annotatedFieldName.replace(PREFERENCE_PREFIX, "")
+                                            className
                                     );
                                 } else if ((annotatedClazz.clazzName + COMPONENT_PREFIX)
                                         .equals(annotatedFieldName))
