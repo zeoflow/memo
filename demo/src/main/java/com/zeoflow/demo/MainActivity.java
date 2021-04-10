@@ -25,10 +25,9 @@ import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 
 import com.zeoflow.app.Activity;
-import com.zeoflow.demo.components.AppComponent;
-import com.zeoflow.demo.components.AppComponent_Memo;
-import com.zeoflow.demo.entities.User;
-import com.zeoflow.demo.models.ItemProfile;
+import com.zeoflow.demo.components.AppStorage;
+import com.zeoflow.demo.components.AppStorage_Memo;
+import com.zeoflow.demo.utils.ItemProfile;
 import com.zeoflow.demo.utils.ListViewAdapter;
 import com.zeoflow.memo.ConcealEncryption;
 import com.zeoflow.memo.Memo;
@@ -38,10 +37,10 @@ public class MainActivity extends Activity
 {
 
     /**
-     * UserProfile Component. {@link AppComponent}
+     * UserProfile Component. {@link AppStorage}
      */
     @InjectPreference
-    public AppComponent_Memo component;
+    public AppStorage_Memo component;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -49,13 +48,12 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AppComponent_Memo.getInstance()
+        AppStorage_Memo.getInstance()
                 .inject(this);
 
         initializeUI();
-        setProfileButton();
 
-        component.UserProfile().nicknameObserver(this, nickname -> initializeUI());
+        component.UserProfile().usernameObserver(this, nickname -> initializeUI());
 
 //        memoExample();
     }
@@ -156,57 +154,40 @@ public class MainActivity extends Activity
 
     private void initializeUI()
     {
-        Toast.makeText(zContext, "hereWeAre", Toast.LENGTH_SHORT).show();
-        ListViewAdapter adapter = new ListViewAdapter(this, R.layout.item_profile);
-        if (component.UserProfile().getLogin())
+        if (!component.UserProfile().getLogin())
         {
+            Toast.makeText(zContext, "No user registered. Please register one.", Toast.LENGTH_SHORT).show();
+            configureNewActivity(LoginActivity.class)
+                    .start();
+        } else
+        {
+            Button needLoginView = findViewById(R.id.content_button);
+            needLoginView.setOnClickListener(view ->
+            {
+                configureNewActivity(LoginActivity.class)
+                        .start();
+            });
+            ListViewAdapter adapter = new ListViewAdapter(this, R.layout.item_profile);
+
             ListView listView = findViewById(R.id.content_listView);
             ViewCompat.setNestedScrollingEnabled(listView, true);
             listView.setAdapter(adapter);
 
-            adapter.addItem(new ItemProfile("message", component.UserProfile().getNickname()));
-            adapter.addItem(
-                    new ItemProfile("nick value", component.UserProfile().getUserinfo().getName()));
-            adapter.addItem(new ItemProfile("age", component.UserProfile().getUserinfo().getAge() + ""));
-            adapter.addItem(new ItemProfile("visits", component.UserProfile().getVisits() + ""));
+            adapter.addItem(new ItemProfile("Message", component.UserProfile().getUsername()));
+            adapter.addItem(new ItemProfile("Full Name", component.UserProfile().getUserinfo().getFirstName()));
+            adapter.addItem(new ItemProfile("First Name", component.UserProfile().getUserinfo().getFirstName()));
+            adapter.addItem(new ItemProfile("Last Name", component.UserProfile().getUserinfo().getLastName()));
+            adapter.addItem(new ItemProfile("Views", component.UserProfile().getViews() + ""));
+            component.UserProfile().putViews(component.UserProfile().getViews());
 
-            /*
-             * increment visits count. show {@link com.zeoflow.demo.entities.Profile}
-             * putVisitCountFunction()
-             */
-            component.UserProfile().putVisits(component.UserProfile().getVisits());
+            if (component.Country().getCountryCode() == null)
+            {
+                component.Country().putCountry("Romania");
+                component.Country().putCountryCode("RO");
+            }
+            adapter.addItem(new ItemProfile("country", component.Country().getCountry()));
+            adapter.addItem(new ItemProfile("country code", component.Country().getCountryCode()));
         }
-
-        if (component.UserDevice().getUuid() == null)
-        {
-            putDumpDeviceInfo();
-        } else
-        {
-            adapter.addItem(new ItemProfile("version", component.UserDevice().getVersion()));
-            adapter.addItem(new ItemProfile("uuid", component.UserDevice().getUuid()));
-        }
-    }
-
-    private void setProfileButton()
-    {
-        Button needLoginView = findViewById(R.id.content_button);
-        needLoginView.setOnClickListener(view ->
-        {
-            User user = User.create(
-                    2,
-                    "Teodor",
-                    "Ana"
-            );
-            configureNewActivity(LoginActivity.class)
-                    .withParam("user", user)
-                    .start();
-        });
-    }
-
-    private void putDumpDeviceInfo()
-    {
-        component.UserDevice().putVersion("1.0.0.0");
-        component.UserDevice().putUuid("00001234-0000-0000-0000-000123456789");
     }
 
 }

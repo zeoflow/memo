@@ -18,15 +18,15 @@ package com.zeoflow.demo.components;
 
 import com.zeoflow.demo.LoginActivity;
 import com.zeoflow.demo.MainActivity;
-import com.zeoflow.demo.entities.Device;
-import com.zeoflow.demo.entities.Profile;
+import com.zeoflow.demo.entities.Country;
+import com.zeoflow.demo.entities.User;
 import com.zeoflow.memo.annotation.MemoComponent;
 
 /**
  * Component integrates entities.
  */
-@MemoComponent(entities = {Profile.class, Device.class})
-public interface AppComponent
+@MemoComponent(entities = {User.class, Country.class})
+public interface AppStorage
 {
 
     /**

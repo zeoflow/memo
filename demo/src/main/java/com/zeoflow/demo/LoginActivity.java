@@ -17,25 +17,26 @@
 package com.zeoflow.demo;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zeoflow.app.Activity;
-import com.zeoflow.demo.components.AppComponent_Memo;
+import com.zeoflow.demo.components.AppStorage_Memo;
+import com.zeoflow.demo.entities.PrivateInfo;
+import com.zeoflow.demo.entities.User;
 import com.zeoflow.demo.entities.UserProfile_MemoEntity;
-import com.zeoflow.demo.models.PrivateInfo;
 import com.zeoflow.memo.annotation.InjectPreference;
+import com.zeoflow.utils.string.StringCreator;
 
 public class LoginActivity extends Activity
 {
 
     /**
-     * UserProfile entity. {@link com.zeoflow.demo.entities.Profile}
+     * UserProfile entity. {@link User}
      */
     @InjectPreference
-    public AppComponent_Memo component;
+    public AppStorage_Memo component;
     @InjectPreference
     public UserProfile_MemoEntity userProfile;
 
@@ -44,38 +45,34 @@ public class LoginActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        AppComponent_Memo.getInstance().inject(this);
+        AppStorage_Memo.getInstance().inject(this);
 
-        final EditText editText_nick = findViewById(R.id.login_editText_nick);
-        final EditText editText_age = findViewById(R.id.login_editText_age);
+        final EditText editText_username = findViewById(R.id.login_editText_username);
+        final EditText editText_firstName = findViewById(R.id.login_editText_firstName);
+        final EditText editText_lastName = findViewById(R.id.login_editText_lastName);
         final Button button = findViewById(R.id.login_button);
-        button.setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        String inputNick = editText_nick.getText().toString();
-                        String inputAge = editText_age.getText().toString();
-                        if (!inputNick.equals("") && !inputAge.equals(""))
-                        {
-                            userProfile.putLogin(true);
-                            userProfile.putNickname(inputNick);
-                            userProfile.putUserinfo(new PrivateInfo(inputNick, Integer.parseInt(inputAge)));
-                            finish();
-                        } else
-                        {
-                            Toast.makeText(getBaseContext(), "please fill all inputs", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-        userProfile.addNicknameListeners(new UserProfile_MemoEntity.NicknameIOnChangedListener()
+        button.setOnClickListener(view ->
         {
-            @Override
-            public void onChanged(String nickname)
+            String inputUsername = editText_username.getText().toString();
+            String inputFirstName = editText_firstName.getText().toString();
+            String inputLastName = editText_lastName.getText().toString();
+            if (!inputUsername.equals("") && !inputFirstName.equals("") && !inputLastName.equals(""))
             {
-                Toast.makeText(getBaseContext(), "onChanged :" + nickname, Toast.LENGTH_SHORT).show();
+                userProfile.putLogin(true);
+                userProfile.putUsername(inputUsername);
+                userProfile.putUserinfo(new PrivateInfo(inputFirstName, inputLastName));
+                finish();
+            } else
+            {
+                Toast.makeText(getBaseContext(), "please fill all inputs", Toast.LENGTH_SHORT).show();
             }
+        });
+        userProfile.addLoginListeners(login ->
+        {
+            String content = StringCreator.creator()
+                    .add("User profile updated! Welcome, $N!", userProfile.getUsername())
+                    .asString();
+            Toast.makeText(getBaseContext(), content, Toast.LENGTH_SHORT).show();
         });
     }
 
