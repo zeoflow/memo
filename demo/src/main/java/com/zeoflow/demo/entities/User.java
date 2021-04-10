@@ -3,6 +3,7 @@ package com.zeoflow.demo.entities;
 import com.zeoflow.memo.annotation.EncryptEntity;
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.Listener;
+import com.zeoflow.memo.annotation.MemoCompoundFunction;
 import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 import com.zeoflow.memo.annotation.Observable;
@@ -67,10 +68,22 @@ public class User
         return ++count;
     }
 
-    @MemoFunction("fullName")
-    public String getFullName(String fullName)
+    @MemoCompoundFunction(values = {"username", "views"})
+    public String getUserFullName(String username, int views)
     {
-        return fullName;
+        return username + " " + views;
+    }
+
+    @MemoCompoundFunction(values = {"userinfo"})
+    public String getFullName(PrivateInfo userinfo)
+    {
+        return userinfo.getFirstName() + " " + userinfo.getLastName();
+    }
+
+    @MemoCompoundFunction(values = {"userinfo", "views"})
+    public String getFullNameAndViews(PrivateInfo userinfo, int views)
+    {
+        return userinfo.getFirstName() + " " + userinfo.getLastName() + ", views count: " + views;
     }
 
 }
