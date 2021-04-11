@@ -23,7 +23,7 @@ dependencies {
     implementation("com.zeoflow:parcelled-runtime:1.1.0")
     annotationProcessor("com.zeoflow:parcelled-compiler:1.1.0")
 
-    implementation project(":memo:memo")
-    implementation project(":memo:annotation")
-    annotationProcessor project(":memo:compiler")
+    implementation project(":memo")
+    implementation project(":memo-annotation")
+    annotationProcessor project(":memo-compiler")
 }
