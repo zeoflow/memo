@@ -20,8 +20,8 @@ android {
 }
 
 dependencies {
-    implementation project(":memo:memo")
-    implementation project(":memo:annotation")
+    implementation project(":memo")
+    implementation project(":memo-annotation")
 
     implementation("com.zeoflow:jx:1.2.0")
 
