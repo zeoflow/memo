@@ -107,8 +107,8 @@ def includeProject(name, filePath, List<BuildType> filter = []) {
 includeProject(":demo", "demo")
 
 // Memo Components
-includeProject(":memo-lib:memo", "memo")
-includeProject(":memo-lib:annotation", "memo-annotation")
-includeProject(":memo-lib:compiler", "memo-compiler")
+includeProject(":memo:memo", "memo-core")
+includeProject(":memo:annotation", "memo-annotation")
+includeProject(":memo:compiler", "memo-compiler")
 
 rootProject.name = "Memo"
