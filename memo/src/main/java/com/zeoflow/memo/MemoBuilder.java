@@ -36,10 +36,10 @@ public class MemoBuilder
     }
     LogInterceptor getLogInterceptor()
     {
+        //noinspection StatementWithEmptyBody
         if (logInterceptor == null)
         {
             //empty implementation
-            logInterceptor = System.out::println;
         }
         return logInterceptor;
     }
