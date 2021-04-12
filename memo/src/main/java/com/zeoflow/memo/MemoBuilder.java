@@ -36,10 +36,12 @@ public class MemoBuilder
     }
     LogInterceptor getLogInterceptor()
     {
-        //noinspection StatementWithEmptyBody
         if (logInterceptor == null)
         {
-            //empty implementation
+            logInterceptor = message ->
+            {
+                //empty implementation
+            };
         }
         return logInterceptor;
     }
