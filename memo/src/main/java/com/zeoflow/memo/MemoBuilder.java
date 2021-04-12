@@ -38,8 +38,10 @@ public class MemoBuilder
     {
         if (logInterceptor == null)
         {
-            //empty implementation
-            logInterceptor = System.out::println;
+            logInterceptor = message ->
+            {
+                //empty implementation
+            };
         }
         return logInterceptor;
     }
