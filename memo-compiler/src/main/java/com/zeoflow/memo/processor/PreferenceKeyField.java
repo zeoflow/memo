@@ -63,11 +63,11 @@ public class PreferenceKeyField
         {
             this.keyName =
                     Strings.isNullOrEmpty(annotation_keyName.value())
-                            ? StringUtils.toUpperCamel(this.clazzName)
+                            ? StringUtils.toLowerCamel(this.clazzName)
                             : annotation_keyName.value();
         } else
         {
-            this.keyName = StringUtils.toUpperCamel(this.clazzName);
+            this.keyName = StringUtils.toLowerCamel(this.clazzName);
         }
         if (variableElement.getAnnotation(Observable.class) != null)
         {

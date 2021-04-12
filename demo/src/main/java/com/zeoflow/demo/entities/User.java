@@ -18,7 +18,7 @@ public class User
     protected final String userNickName = "zeoflow";
 
     /**
-     * key value will be 'Login'. (login's camel uppercase)
+     * key value will be 'login'. (login's camel lowercase)
      */
     @Listener
     protected final boolean login = false;
