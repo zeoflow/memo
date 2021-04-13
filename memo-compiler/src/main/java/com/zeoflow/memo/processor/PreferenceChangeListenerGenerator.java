@@ -24,7 +24,7 @@ import com.zeoflow.jx.file.MethodSpec;
 import com.zeoflow.jx.file.ParameterSpec;
 import com.zeoflow.jx.file.ParameterizedTypeName;
 import com.zeoflow.jx.file.TypeSpec;
-import com.zeoflow.memo.annotation.MemoChangedListener;
+import com.zeoflow.memo.annotation.IMemoChangedListener;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class PreferenceChangeListenerGenerator
         TypeSpec.Builder builder =
                 TypeSpec.interfaceBuilder(getClazzName())
                         .addModifiers(PUBLIC)
-                        .addSuperinterface(MemoChangedListener.class)
+                        .addSuperinterface(IMemoChangedListener.class)
                         .addMethod(getOnChangedSpec());
         return builder.build();
     }
