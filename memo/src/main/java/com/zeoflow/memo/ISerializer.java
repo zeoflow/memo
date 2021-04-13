@@ -7,7 +7,7 @@ package com.zeoflow.memo;
  *
  * @see MemoSerializer
  */
-public interface Serializer
+public interface ISerializer
 {
 
     /**

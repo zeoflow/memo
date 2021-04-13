@@ -10,7 +10,7 @@ import static com.zeoflow.memo.MemoApplication.getContext;
 public final class Memo
 {
 
-    static MemoFacade memoFacade = new MemoFacade.EmptyMemoFacade();
+    static IMemoFacade memoFacade = new IMemoFacade.EmptyMemoFacade();
 
     private Memo()
     {

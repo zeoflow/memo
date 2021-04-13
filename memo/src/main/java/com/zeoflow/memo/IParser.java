@@ -4,14 +4,14 @@ import java.lang.reflect.Type;
 
 /**
  * Intermediate layer that handles serialization/deserialization for the end result.
- * This is not the same as {@link Serializer}. This interface is only used to convert the intermediate value
- * into String or vice-versa to be used for {@link Storage}
+ * This is not the same as {@link ISerializer}. This interface is only used to convert the intermediate value
+ * into String or vice-versa to be used for {@link IStorage}
  *
  * <p>Use custom implementation if built-in implementation is not enough.</p>
  *
  * @see ZsonParser
  */
-public interface Parser
+public interface IParser
 {
 
     /**

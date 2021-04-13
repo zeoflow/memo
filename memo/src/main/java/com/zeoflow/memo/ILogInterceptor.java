@@ -3,7 +3,7 @@ package com.zeoflow.memo;
 /**
  * Interceptor for all logs happens in the library
  */
-public interface LogInterceptor
+public interface ILogInterceptor
 {
 
     /**

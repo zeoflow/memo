@@ -6,7 +6,7 @@ package com.zeoflow.memo;
  *
  * @see MemoConverter
  */
-public interface Converter
+public interface IConverter
 {
 
     /**

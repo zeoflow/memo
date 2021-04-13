@@ -15,16 +15,16 @@ import java.util.Set;
  * Serializable types will be encoded/decoded object stream
  * Not serializable objects will be encoded/decoded by parser
  */
-final class MemoConverter implements Converter
+final class MemoConverter implements IConverter
 {
 
-    private final Parser parser;
+    private final IParser parser;
 
-    public MemoConverter(Parser parser)
+    public MemoConverter(IParser parser)
     {
         if (parser == null)
         {
-            throw new NullPointerException("Parser should not be null");
+            throw new NullPointerException("IParser should not be null");
         }
         this.parser = parser;
     }

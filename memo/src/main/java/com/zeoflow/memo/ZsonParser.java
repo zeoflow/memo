@@ -7,7 +7,7 @@ import com.zeoflow.zson.Zson;
 
 import java.lang.reflect.Type;
 
-public final class ZsonParser implements Parser
+public final class ZsonParser implements IParser
 {
 
     private final Zson zson;
