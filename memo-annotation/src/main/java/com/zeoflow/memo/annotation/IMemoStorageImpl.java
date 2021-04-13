@@ -16,7 +16,7 @@
 
 package com.zeoflow.memo.annotation;
 
-public interface MemoStorageImpl
+public interface IMemoStorageImpl
 {
 
 }

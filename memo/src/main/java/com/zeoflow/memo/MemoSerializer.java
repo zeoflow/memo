@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-class MemoSerializer implements Serializer
+class MemoSerializer implements ISerializer
 {
 
     private static final char DELIMITER = '@';
     private static final String INFO_DELIMITER = "#";
     private static final char NEW_VERSION = 'V';
 
-    private final LogInterceptor logInterceptor;
+    private final ILogInterceptor logInterceptor;
 
-    MemoSerializer(LogInterceptor logInterceptor)
+    MemoSerializer(ILogInterceptor logInterceptor)
     {
         this.logInterceptor = logInterceptor;
     }

@@ -1,13 +1,13 @@
 package com.zeoflow.memo;
 
-public class DefaultMemoFacade implements MemoFacade
+public class DefaultMemoFacade implements IMemoFacade
 {
 
-    private final Storage storage;
-    private final Converter converter;
+    private final IStorage storage;
+    private final IConverter converter;
     private final Encryption encryption;
-    private final Serializer serializer;
-    private final LogInterceptor logInterceptor;
+    private final ISerializer serializer;
+    private final ILogInterceptor logInterceptor;
 
     public DefaultMemoFacade(MemoBuilder builder)
     {
@@ -39,7 +39,7 @@ public class DefaultMemoFacade implements MemoFacade
         log("Memo.put -> Converted to " + plainText);
         if (plainText == null)
         {
-            log("Memo.put -> Converter failed");
+            log("Memo.put -> IConverter failed");
             return false;
         }
 
@@ -132,7 +132,7 @@ public class DefaultMemoFacade implements MemoFacade
             log("Memo.get -> Converted to : " + result);
         } catch (Exception e)
         {
-            log("Memo.get -> Converter failed");
+            log("Memo.get -> IConverter failed");
         }
 
         return result;
@@ -155,7 +155,7 @@ public class DefaultMemoFacade implements MemoFacade
         log("Memo.put -> Converted to " + plainText);
         if (plainText == null)
         {
-            log("Memo.put -> Converter failed");
+            log("Memo.put -> IConverter failed");
             return "";
         }
 
@@ -223,7 +223,7 @@ public class DefaultMemoFacade implements MemoFacade
             log("Memo.get -> Converted to : " + result);
         } catch (Exception e)
         {
-            log("Memo.get -> Converter failed");
+            log("Memo.get -> IConverter failed");
         }
 
         return result;

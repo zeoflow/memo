@@ -3,7 +3,7 @@ package com.zeoflow.memo;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-final class SharedPreferencesStorage implements Storage
+final class SharedPreferencesStorage implements IStorage
 {
 
     private final SharedPreferences preferences;

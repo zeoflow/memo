@@ -7,7 +7,7 @@ package com.zeoflow.memo;
  *
  * @see SharedPreferencesStorage
  */
-public interface Storage
+public interface IStorage
 {
 
     /**

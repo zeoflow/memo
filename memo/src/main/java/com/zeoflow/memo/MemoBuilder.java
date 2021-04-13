@@ -17,12 +17,12 @@ public class MemoBuilder
     private static final String STORAGE_TAG_DO_NOT_CHANGE = "MemoStorage";
 
     private final Context context;
-    private Storage cryptoStorage;
-    private Converter converter;
-    private Parser parser;
+    private IStorage cryptoStorage;
+    private IConverter converter;
+    private IParser parser;
     private Encryption encryption;
-    private Serializer serializer;
-    private LogInterceptor logInterceptor;
+    private ISerializer serializer;
+    private ILogInterceptor logInterceptor;
 
     public MemoBuilder()
     {
@@ -34,7 +34,7 @@ public class MemoBuilder
 
         this.context = context.getApplicationContext();
     }
-    LogInterceptor getLogInterceptor()
+    ILogInterceptor getLogInterceptor()
     {
         if (logInterceptor == null)
         {
@@ -45,12 +45,12 @@ public class MemoBuilder
         }
         return logInterceptor;
     }
-    public MemoBuilder setLogInterceptor(LogInterceptor logInterceptor)
+    public MemoBuilder setLogInterceptor(ILogInterceptor logInterceptor)
     {
         this.logInterceptor = logInterceptor;
         return this;
     }
-    Storage getStorage()
+    IStorage getStorage()
     {
         if (cryptoStorage == null)
         {
@@ -58,12 +58,12 @@ public class MemoBuilder
         }
         return cryptoStorage;
     }
-    public MemoBuilder setStorage(Storage storage)
+    public MemoBuilder setStorage(IStorage storage)
     {
         this.cryptoStorage = storage;
         return this;
     }
-    Converter getConverter()
+    IConverter getConverter()
     {
         if (converter == null)
         {
@@ -71,12 +71,12 @@ public class MemoBuilder
         }
         return converter;
     }
-    public MemoBuilder setConverter(Converter converter)
+    public MemoBuilder setConverter(IConverter converter)
     {
         this.converter = converter;
         return this;
     }
-    Parser getParser()
+    IParser getParser()
     {
         if (parser == null)
         {
@@ -84,7 +84,7 @@ public class MemoBuilder
         }
         return parser;
     }
-    public MemoBuilder setParser(Parser parser)
+    public MemoBuilder setParser(IParser parser)
     {
         this.parser = parser;
         return this;
@@ -106,7 +106,7 @@ public class MemoBuilder
         this.encryption = encryption;
         return this;
     }
-    Serializer getSerializer()
+    ISerializer getSerializer()
     {
         if (serializer == null)
         {
@@ -114,7 +114,7 @@ public class MemoBuilder
         }
         return serializer;
     }
-    public MemoBuilder setSerializer(Serializer serializer)
+    public MemoBuilder setSerializer(ISerializer serializer)
     {
         this.serializer = serializer;
         return this;

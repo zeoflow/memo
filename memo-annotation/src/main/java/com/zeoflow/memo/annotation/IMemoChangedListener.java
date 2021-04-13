@@ -17,11 +17,11 @@
 package com.zeoflow.memo.annotation;
 
 /**
- * MemoChangedListener is an interface of the listening for
+ * IMemoChangedListener is an interface of the listening for
  *
  * <p>SharedPreference persistence's value changes.
  */
-public interface MemoChangedListener
+public interface IMemoChangedListener
 {
 
 }

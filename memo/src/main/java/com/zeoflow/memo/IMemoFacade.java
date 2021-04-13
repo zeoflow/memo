@@ -1,6 +1,6 @@
 package com.zeoflow.memo;
 
-public interface MemoFacade
+public interface IMemoFacade
 {
 
     <T> boolean put(String key, T value);
@@ -25,7 +25,7 @@ public interface MemoFacade
 
     void destroy();
 
-    class EmptyMemoFacade implements MemoFacade
+    class EmptyMemoFacade implements IMemoFacade
     {
 
         @Override
