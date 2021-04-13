@@ -27,7 +27,7 @@ dependencies {
     // ...
 
     // declare memo version
-    def memo_version = "1.0.0"
+    def memo_version = "x.y.z"
 
     // Memo Library
     implementation("com.zeoflow:memo:$memo_version")
