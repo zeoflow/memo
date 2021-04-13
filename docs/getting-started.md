@@ -27,7 +27,7 @@ dependencies {
     // ...
 
     // declare memo version
-    def memo_version = "1.0.0"
+    def memo_version = "x.y.z"
 
     // Memo Library
     implementation("com.zeoflow:memo:$memo_version")
@@ -90,6 +90,212 @@ Memo.init(context)
   .setParser(new MyParser())
   .setStorage(new MyStorage())
   .build();
+```
+
+### 3. Injector
+#### 3.1 Build MemoEntity Class
+```java
+/**
+ * the entity generated will be named UserProfile_MemoEntity
+ * it was annotated with @MemoEntity("UserProfile")
+ *
+ * the entity will be encrypted using the "G15y3aV9M8d" key
+ * it was annotated with @EncryptEntity("G15y3aV9M8d")
+ */
+@MemoEntity("UserProfile")
+@EncryptEntity("G15y3aV9M8d")
+public class User
+{
+
+    /**
+     * the default value will be "zeoflow"
+     *
+     * generated field will be named username
+     *
+     * this field is observable
+     * it was annotated with @Observable
+     */
+    @KeyName("username")
+    @Observable
+    protected final String userUsername = "zeoflow";
+
+    /**
+     * generated field name will be login - lowerCamel
+     *
+     * this field will have its own onChangedListener
+     * it was annotated with @Listener
+     */
+    @Listener
+    protected final boolean login = false;
+
+    /* the default value will be 1 */
+    @KeyName("views")
+    protected final int viewsCount = 1;
+
+    /* the default value will be null */
+    @KeyName("userinfo")
+    protected PrivateInfo privateInfo;
+
+    /**
+     * preference putter function for userUsername.
+     *
+     * @param userUsername function in
+     *
+     * @return function out
+     */
+    @MemoFunction("username")
+    public String putUserUsernameFunction(String userUsername)
+    {
+        return "Hello, " + userUsername;
+    }
+
+    /**
+     * preference getter function for userUsername.
+     *
+     * @param userUsername function in
+     *
+     * @return function out
+     */
+    @MemoFunction("username")
+    public String getUserUsernameFunction(String userUsername)
+    {
+        return userUsername + "!!!";
+    }
+
+    /**
+     * preference putter function example for visitCount's auto increment.
+     *
+     * @param count function in
+     *
+     * @return function out
+     */
+    @MemoFunction("views")
+    public int putVisitCountFunction(int count)
+    {
+        return ++count;
+    }
+
+    /**
+     * preference getter compound function for following fields.
+     *
+     * Params declared inside @MemoCompoundFunction's annotation
+     * @param username function in
+     * @param views function in
+     *
+     * @return $username $views
+     */
+    @MemoCompoundFunction(values = {"username", "views"})
+    public String getUserViews(String username, int views)
+    {
+        return username + " " + views;
+    }
+
+    /**
+     * preference getter compound function for following fields.
+     *
+     * Params declared inside @MemoCompoundFunction's annotation
+     * @param userinfo function in
+     *
+     * @return $first_name $last_name
+     */
+    @MemoCompoundFunction(values = {"userinfo"})
+    public String getFullName(PrivateInfo userinfo)
+    {
+        return userinfo.getFirstName() + " " + userinfo.getLastName();
+    }
+
+    /**
+     * preference getter compound function for following fields.
+     *
+     * Params declared inside @MemoCompoundFunction's annotation
+     * @param userinfo function in
+     * @param views function in
+     *
+     * @return $first_name $last_name, views count $views
+     */
+    @MemoCompoundFunction(values = {"userinfo", "views"})
+    public String getFullNameAndViews(PrivateInfo userinfo, int views)
+    {
+        return userinfo.getFirstName() + " " + userinfo.getLastName() + ", views count: " + views;
+    }
+
+}
+```
+
+#### 3.2 Helper Class for Memo's injector
+Create injector class
+```java
+/**
+ * Component that integrates memo entities; it must be an interface
+ * and annotated with @MemoComponent. The generated class will end in
+ * $_Memo (generated class for this interface will be AppStorage_Memo
+ *
+ * inside this Memo manager, the following MemoEntities are injected:
+ * - User
+ * - Country
+ */
+@MemoComponent(entities = {User.class, Country.class})
+public interface AppStorage
+{
+
+    /**
+     * declare dependency injection target MaiActivity.
+     */
+    void inject(MainActivity mainActivity);
+
+    /**
+     * declare dependency injection target LoginActivity.
+     */
+    void inject(LoginActivity loginActivity);
+
+}
+```
+
+Create variables that needs to be injected by the `AppStorage_Memo`
+```java
+@InjectPreference
+public AppStorage_Memo component;
+@InjectPreference
+public UserProfile_MemoEntity userProfile;
+```
+
+Inject `MainActivity` in the `AppStorage_Memo`
+```java
+AppStorage_Memo.getInstance().inject((MainActivity) this);
+```
+
+Access MemoEntity from Memo Component
+```java
+component.userProfile();
+```
+
+Put value inside `userProfile`
+```java
+userProfile.putUsername(inputUsername);
+```
+
+Add change listener for login
+```java
+userProfile.addLoginListeners(new UserProfile_MemoEntity.LoginIOnChangedListener()
+{
+    @Override
+    public void onChanged(boolean login)
+    {
+        // do something
+    }
+});
+```
+
+Add observable for the username field
+```java
+component.userProfile().usernameObserver((LifecycleOwner) this, new Observer<String>()
+{
+    @Override
+    public void onChanged(String username)
+    {
+        // do something here
+    }
+});
 ```
 
 Visit [MVN Repository](https://mvnrepository.com/artifact/com.zeoflow/memo)

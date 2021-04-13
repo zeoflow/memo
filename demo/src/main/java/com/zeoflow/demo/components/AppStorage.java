@@ -23,17 +23,26 @@ import com.zeoflow.demo.entities.User;
 import com.zeoflow.memo.annotation.MemoComponent;
 
 /**
- * Component integrates entities.
+ * Component that integrates memo entities; it must be an interface
+ * and annotated with @MemoComponent. The generated class will end in
+ * $_Memo (generated class for this interface will be AppStorage_Memo
+ *
+ * inside this Memo manager, the following MemoEntities are injected:
+ * - User
+ * - Country
  */
 @MemoComponent(entities = {User.class, Country.class})
 public interface AppStorage
 {
 
     /**
-     * declare dependency injection targets.
+     * declare dependency injection target MaiActivity.
      */
     void inject(MainActivity mainActivity);
 
+    /**
+     * declare dependency injection target LoginActivity.
+     */
     void inject(LoginActivity loginActivity);
 
 }
