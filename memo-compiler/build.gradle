@@ -20,16 +20,16 @@ android {
 }
 
 dependencies {
-    implementation project(":memo-lib:annotation")
-    implementation project(":memo-lib:memo")
+    implementation project(path: ':memo')
+    implementation project(path: ':memo-annotation')
 
     implementation("com.zeoflow:jx:1.2.0")
 
-    implementation "com.google.auto.service:auto-service-annotations:1.0-rc7"
+    implementation("com.google.auto.service:auto-service-annotations:1.0-rc7")
     annotationProcessor("com.google.auto.service:auto-service:1.0-rc7")
-    api "com.google.guava:guava:28.2-jre"
+    api("com.google.guava:guava:28.2-jre")
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
 
 apply from: "${rootProject.projectDir}/buildSrc/upload.gradle"

@@ -1,5 +1,5 @@
 # Memo
-Android processing and secured library for managing SharedPreferences as key-value elements persistence efficiently and structurally.
+Android processing and secured library for managing SharedPreferences as key-value elements efficiently and structurally.
 
 ### 1. Depend on our library
 
