@@ -24,11 +24,11 @@ dependencies {
     implementation project(path: ':memo-annotation')
 
     // Dependencies from maven
-//    def memo_version = "1.1.5"
+//    def memo_version = "1.1.6"
 //    implementation("com.zeoflow:memo:$memo_version")
 //    implementation("com.zeoflow:memo-annotation:$memo_version")
 
-    implementation("com.zeoflow:jx:1.2.0")
+    implementation("com.zeoflow:jx:1.2.1")
 
     implementation("com.google.auto.service:auto-service-annotations:1.0-rc7")
     annotationProcessor("com.google.auto.service:auto-service:1.0-rc7")
