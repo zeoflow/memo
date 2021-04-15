@@ -120,6 +120,7 @@ public class PreferenceComponentAnnotatedClass
                 });
 
         entities.addAll(entitySet);
+
     }
 
 }

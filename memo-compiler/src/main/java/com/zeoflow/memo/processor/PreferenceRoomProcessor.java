@@ -248,9 +248,10 @@ public class PreferenceRoomProcessor extends AbstractProcessor
     {
         try
         {
-            TypeSpec annotatedClazz =
-                    (new PreferenceEntityGenerator(annotatedClass, processingEnv.getElementUtils()))
-                            .generate();
+            TypeSpec annotatedClazz = new PreferenceEntityGenerator(
+                    annotatedClass,
+                    processingEnv.getElementUtils()
+            ).generate();
             JavaFile.builder(annotatedClass.packageName, annotatedClazz)
                     .addStaticImport(ClassName.get(MemoApplication.class), "getContext")
                     .build()
@@ -284,7 +285,16 @@ public class PreferenceRoomProcessor extends AbstractProcessor
         } else
         {
             annotatedEntityMap.put(annotatedClazz.entityName, annotatedClazz);
-            annotatedEntityNameMap.put(annotatedClazz.typeName + ".class", annotatedClazz.entityName);
+            int start = annotatedClazz.typeName.toString().indexOf("<");
+            int end = annotatedClazz.typeName.toString().lastIndexOf(">") + 1;
+            if (start != -1)
+            {
+                String className = annotatedClazz.typeName.toString().substring(0, start) + annotatedClazz.typeName.toString().substring(end);
+                annotatedEntityNameMap.put(className + ".class", annotatedClazz.entityName);
+            } else
+            {
+                annotatedEntityNameMap.put(annotatedClazz.typeName + ".class", annotatedClazz.entityName);
+            }
         }
     }
 
