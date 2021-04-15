@@ -29,6 +29,7 @@ import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 
@@ -63,6 +65,7 @@ public class PreferenceEntityAnnotatedClass
     public boolean isDefaultPreference = false;
     public boolean isEncryption = false;
     public String encryptionKey = null;
+    public final List<String> typeParameters;
 
     public PreferenceEntityAnnotatedClass(
             @NonNull TypeElement annotatedElement, @NonNull Elements elementUtils)
@@ -87,6 +90,11 @@ public class PreferenceEntityAnnotatedClass
         this.setterFunctionsList = new HashMap<>();
         this.getterFunctionsList = new HashMap<>();
         this.getterCompoundFunctionsList = new HashMap<>();
+        this.typeParameters = new ArrayList<>();
+        for(TypeParameterElement typeParameter: annotatedElement.getTypeParameters())
+        {
+            typeParameters.add(typeParameter.getSimpleName().toString());
+        }
 
         if (defaultMemo != null) isDefaultPreference = true;
         if (encryptEntity != null && !encryptEntity.value().isEmpty())
