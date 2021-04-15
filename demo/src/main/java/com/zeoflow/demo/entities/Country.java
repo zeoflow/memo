@@ -16,12 +16,14 @@
 
 package com.zeoflow.demo.entities;
 
+import android.database.Observable;
+
 import com.zeoflow.memo.annotation.KeyName;
 import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 
 @MemoEntity("Country")
-public class Country
+public class Country<T>
 {
 
     @KeyName("countryCode")
@@ -29,6 +31,8 @@ public class Country
 
     @KeyName("country")
     public final String countryName = "United Kingdom";
+
+    public Observable<T> test;
 
     /**
      * preference putter function example toUpperCase().
