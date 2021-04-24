@@ -132,4 +132,10 @@ public class User
         return userinfo.getFirstName() + " " + userinfo.getLastName() + ", views count: " + views;
     }
 
+    @MemoCompoundFunction(values = {"userinfo", "views"})
+    public void putFullNameAndViews(PrivateInfo userinfo, int views)
+    {
+        String s = userinfo.getFirstName() + " " + userinfo.getLastName() + ", views count: " + views;
+    }
+
 }

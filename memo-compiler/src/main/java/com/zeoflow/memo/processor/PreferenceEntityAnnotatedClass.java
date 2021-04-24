@@ -29,7 +29,6 @@ import com.zeoflow.memo.annotation.MemoEntity;
 import com.zeoflow.memo.annotation.MemoFunction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,10 +61,11 @@ public class PreferenceEntityAnnotatedClass
     public final Map<String, Element> setterFunctionsList;
     public final Map<String, Element> getterFunctionsList;
     public final Map<String[], ExecutableElement> getterCompoundFunctionsList;
+    public final Map<String[], ExecutableElement> setterCompoundFunctionsList;
+    public final List<String> typeParameters;
     public boolean isDefaultPreference = false;
     public boolean isEncryption = false;
     public String encryptionKey = null;
-    public final List<String> typeParameters;
 
     public PreferenceEntityAnnotatedClass(
             @NonNull TypeElement annotatedElement, @NonNull Elements elementUtils)
@@ -90,8 +90,9 @@ public class PreferenceEntityAnnotatedClass
         this.setterFunctionsList = new HashMap<>();
         this.getterFunctionsList = new HashMap<>();
         this.getterCompoundFunctionsList = new HashMap<>();
+        this.setterCompoundFunctionsList = new HashMap<>();
         this.typeParameters = new ArrayList<>();
-        for(TypeParameterElement typeParameter: annotatedElement.getTypeParameters())
+        for (TypeParameterElement typeParameter : annotatedElement.getTypeParameters())
         {
             typeParameters.add(typeParameter.getSimpleName().toString());
         }
@@ -233,19 +234,26 @@ public class PreferenceEntityAnnotatedClass
                                         {
                                             getterCompoundFunctionsList.put(keyNames, (ExecutableElement) function);
                                         }
+                                    } else if (function.getSimpleName().toString().startsWith(SETTER_PREFIX))
+                                    {
+                                        if (!setterCompoundFunctionsList.containsKey(keyNames))
+                                        {
+                                            setterCompoundFunctionsList.put(keyNames, (ExecutableElement) function);
+                                        }
                                     } else
                                     {
-                                        throw new VerifyException(
-                                                String.format(
-                                                        "MemoCompoundFunction's prefix should start only with 'get' : %s",
-                                                        function.getSimpleName()
-                                                ));
+                                        throw new VerifyException(String.format(
+                                                "MemoCompoundFunction's prefix should start only with 'get' or 'put' : %s",
+                                                function.getSimpleName()
+                                        ));
                                     }
                                 } else
                                 {
-                                    throw new VerifyException(
-                                            String.format("keyName '%s' does not exist in entity the current entity for the '%s' function.", keyName, function.getSimpleName())
-                                    );
+                                    throw new VerifyException(String.format(
+                                            "keyName '%s' does not exist in entity the current entity for the '%s' function.",
+                                            keyName,
+                                            function.getSimpleName()
+                                    ));
                                 }
                             }
 

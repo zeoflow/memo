@@ -103,6 +103,7 @@ public class PreferenceEntityGenerator
                 .addFields(getOnChangedFieldSpecs())
                 .addMethods(getFieldMethodSpecs())
                 .addMethods(getCompoundsGetter())
+                .addMethods(getCompoundsSetter())
                 .addMethod(getClearMethodSpec())
                 .addMethod(getKeyNameListMethodSpec())
                 .addMethod(getEntityNameMethodSpec())
@@ -281,8 +282,76 @@ public class PreferenceEntityGenerator
         builder.addStatement("return " + getGetterStatement(element, entry.getKey()));
         return builder.build();
     }
-
     private String getGetterStatement(ExecutableElement element, String[] params)
+    {
+        StringBuilder content = new StringBuilder("super." + element.getSimpleName().toString() + "(");
+        for(String param: params)
+        {
+            PreferenceKeyField preferenceParam = null;
+            for (PreferenceKeyField preferenceKeyField: this.annotatedClazz.keyFields)
+            {
+                if (preferenceKeyField.keyName.equals(param))
+                {
+                    preferenceParam = preferenceKeyField;
+                    break;
+                }
+            }
+            if(preferenceParam != null)
+            {
+                if (preferenceParam.value instanceof String)
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", \"")
+                            .append(preferenceParam.value)
+                            .append("\")");
+                } else if (preferenceParam.value instanceof Float)
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", ")
+                            .append(preferenceParam.value)
+                            .append("f)");
+                } else
+                {
+                    content.append("Memo.get(\"")
+                            .append(preferenceParam.keyName)
+                            .append("\", ")
+                            .append(preferenceParam.value)
+                            .append(")");
+                }
+                content.append(", ");
+            } else {
+                // @todo-zeobot catch exception and alert the user that the field is invalid
+            }
+        }
+        content.delete(content.length() - 2, content.length());
+        return content + ")";
+    }
+
+    private List<MethodSpec> getCompoundsSetter()
+    {
+        List<MethodSpec> methodSpecs = new ArrayList<>();
+        for (Map.Entry<String[], ExecutableElement> entry : this.annotatedClazz.setterCompoundFunctionsList.entrySet())
+        {
+            methodSpecs.add(generateCompoundSetter(entry));
+        }
+        return methodSpecs;
+    }
+    private MethodSpec generateCompoundSetter(Map.Entry<String[], ExecutableElement> entry)
+    {
+        ExecutableElement element = entry.getValue();
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(
+                element.getSimpleName().toString()
+        ).addModifiers(PUBLIC);
+        for(String param: entry.getKey())
+        {
+            builder.addJavadoc("v: " + param + "\n");
+        }
+        builder.addStatement(getSetterStatement(element, entry.getKey()));
+        return builder.build();
+    }
+    private String getSetterStatement(ExecutableElement element, String[] params)
     {
         StringBuilder content = new StringBuilder("super." + element.getSimpleName().toString() + "(");
         for(String param: params)
