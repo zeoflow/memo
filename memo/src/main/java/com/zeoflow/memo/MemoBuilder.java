@@ -93,7 +93,7 @@ public class MemoBuilder
     {
         if (encryption == null)
         {
-            encryption = new ConcealEncryption(context, "sfdgfgsgs");
+            encryption = new ConcealEncryption("sfdgfgsgs");
             if (!encryption.init())
             {
                 encryption = new NoEncryption();
