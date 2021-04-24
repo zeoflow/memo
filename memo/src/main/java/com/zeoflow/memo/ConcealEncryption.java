@@ -1,42 +1,42 @@
 package com.zeoflow.memo;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.util.Base64;
 
-import com.facebook.android.crypto.keychain.AndroidConceal;
-import com.facebook.android.crypto.keychain.SharedPrefsBackedKeyChain;
-import com.facebook.crypto.Crypto;
-import com.facebook.crypto.CryptoConfig;
-import com.facebook.crypto.Entity;
-import com.facebook.crypto.keychain.KeyChain;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
-import static com.zeoflow.memo.MemoApplication.getContext;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
+@SuppressWarnings({"unused", "RedundantSuppression", "RedundantThrows"})
 public class ConcealEncryption implements Encryption
 {
 
-    private final Crypto crypto;
     private final String encryptionKey;
+    private final SecretKey secretKey;
 
     public ConcealEncryption(String encryptionKey)
     {
-        this(getContext(), encryptionKey);
+        this(encryptionKey, true);
     }
 
-    public ConcealEncryption(Context context, String encryptionKey)
+    protected ConcealEncryption(String encryptionKey, boolean init)
     {
-        this(new SharedPrefsBackedKeyChain(context, CryptoConfig.KEY_256), encryptionKey);
-    }
-
-    protected ConcealEncryption(KeyChain keyChain, String encryptionKey)
-    {
-        this(AndroidConceal.get().createDefaultCrypto(keyChain), encryptionKey);
-    }
-
-    protected ConcealEncryption(Crypto crypto, String encryptionKey)
-    {
-        this.crypto = crypto;
         this.encryptionKey = encryptionKey;
+        int keyLength = 128;
+        byte[] keyBytes = new byte[keyLength / 8];
+        Arrays.fill(keyBytes, (byte) 0x0);
+        byte[] passwordBytes = encryptionKey.getBytes(StandardCharsets.UTF_8);
+        int length = Math.min(passwordBytes.length, keyBytes.length);
+        System.arraycopy(passwordBytes, 0, keyBytes, 0, length);
+        this.secretKey = new SecretKeySpec(keyBytes, "AES");
     }
 
     @Override
@@ -47,24 +47,33 @@ public class ConcealEncryption implements Encryption
     @Override
     public boolean init()
     {
-        return crypto.isAvailable();
+        return secretKey != null;
     }
 
+    @SuppressLint("GetInstance")
     @Override
     public String encrypt(String key, String plainText) throws Exception
     {
-        Entity entity = Entity.create(key);
-        byte[] bytes = crypto.encrypt(plainText.getBytes(), entity);
-        return Base64.encodeToString(bytes, Base64.NO_WRAP);
+        try
+        {
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+            return Base64.encodeToString(cipherText, Base64.NO_WRAP);
+        } catch (NoSuchAlgorithmException | IllegalBlockSizeException | InvalidKeyException | BadPaddingException | NoSuchPaddingException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
+    @SuppressLint("GetInstance")
     @Override
     public String decrypt(String key, String cipherText) throws Exception
     {
-        Entity entity = Entity.create(key);
-        byte[] decodedBytes = Base64.decode(cipherText, Base64.NO_WRAP);
-        byte[] bytes = crypto.decrypt(decodedBytes, entity);
-        return new String(bytes);
+        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+        return new String(cipher.doFinal(Base64.decode(cipherText, Base64.NO_WRAP)), StandardCharsets.UTF_8);
     }
 
 }
