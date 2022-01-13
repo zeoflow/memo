@@ -1,13 +1,13 @@
 plugins {
-    id 'com.android.library'
+    id("com.android.library")
+    id("com.vanniktech.maven.publish")
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdk 31
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk 21
+        targetSdk 31
     }
 
     compileOptions {
@@ -36,5 +36,3 @@ dependencies {
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
 }
-
-apply from: "${rootProject.projectDir}/buildSrc/upload.gradle"

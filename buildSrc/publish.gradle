@@ -1,0 +1,211 @@
+apply plugin: 'maven-publish'
+
+task androidJavadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    android.libraryVariants.all { variant ->
+        if (variant.name == 'release') {
+            owner.classpath += variant.javaCompileProvider.get().classpath
+        }
+    }
+
+    exclude '**/R.html', '**/R.*.html', '**/index.html'
+    options.encoding 'utf-8'
+    options {
+        addStringOption 'docencoding', 'utf-8'
+        addStringOption 'charset', 'utf-8'
+        links 'https://docs.oracle.com/javase/7/docs/api/'
+        links 'https://d.android.com/reference'
+        links 'https://developer.android.com/reference/androidx/'
+    }
+}
+
+task androidJavadocJar(type: Jar, dependsOn: androidJavadoc) {
+    archiveClassifier.set('javadoc')
+    from androidJavadoc.destinationDir
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+task javaSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+
+                from components.release
+
+                artifact androidJavadocJar
+                artifact javaSourcesJar
+
+                groupId = GROUP
+                version = VERSION_NAME
+
+                pom {
+                    name = artifactId
+                    description = ''
+                    url = ''
+                    licenses {
+                        license {
+                            name POM_LICENCE_NAME
+                            url POM_LICENCE_URL
+//                            distribution POM_LICENCE_DIST
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'zeoflow'
+                            name = 'ZeoFLow SRL'
+                            email = 'open-source@zeoflow.com'
+                        }
+                        developer {
+                            id = 'teodorhmx1'
+                            name = 'Teodor G.'
+                            email = 'teo@zeoflow.com'
+                        }
+                    }
+                    scm {
+                        url POM_SCM_URL
+                        connection POM_SCM_CONNECTION
+                        developerConnection POM_SCM_DEV_CONNECTION
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+                def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username NEXUS_USERNAME
+                    password NEXUS_PASSWORD
+                }
+            }
+        }
+    }
+}
+
+//apply plugin: 'maven-publish'
+//apply plugin: 'signing'
+
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            mavenRelease(MavenPublication) {
+//                from components.release
+//            }
+//        }
+//    }
+//}
+
+//def isReleaseBuild() {
+//    return VERSION_NAME.contains("SNAPSHOT") == false
+//}
+//
+//def getReleaseRepositoryUrl() {
+//    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
+//            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+//}
+//
+//def getSnapshotRepositoryUrl() {
+//    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
+//            : "https://oss.sonatype.org/content/repositories/snapshots/"
+//}
+//
+//def getRepositoryUsername() {
+//    return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
+//}
+//
+//def getRepositoryPassword() {
+//    return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
+//}
+//
+//java {
+//    withJavadocJar()
+//    withSourcesJar()
+//}
+//
+//
+//afterEvaluate {
+//    publishing {
+//        publications {
+//            maven(MavenPublication) {
+//                groupId = GROUP
+//                artifactId = POM_ARTIFACT_ID
+//                version = VERSION_NAME
+//                pom {
+//                    name POM_NAME
+//                    packaging POM_PACKAGING
+//                    description POM_DESCRIPTION
+//                    url POM_URL
+////                properties = [
+////                        myProp: "value",
+////                        "prop.with.dots": "anotherValue"
+////                ]
+//                    licenses {
+//                        license {
+//                            name POM_LICENCE_NAME
+//                            url POM_LICENCE_URL
+//                            distribution POM_LICENCE_DIST
+//                        }
+//                    }
+//                    developers {
+//                        developer {
+//                            id = 'zeoflow'
+//                            name = 'ZeoFLow SRL'
+//                            email = 'open-source@zeoflow.com'
+//                        }
+//                        developer {
+//                            id = 'teodorhmx1'
+//                            name = 'Teodor G.'
+//                            email = 'teo@zeoflow.com'
+//                        }
+//                    }
+//                    scm {
+//                        url POM_SCM_URL
+//                        connection POM_SCM_CONNECTION
+//                        developerConnection POM_SCM_DEV_CONNECTION
+//                    }
+//                }
+//            }
+//        }
+//        repositories {
+//            maven {
+//                def releasesRepoUrl = layout.buildDirectory.dir('repos/releases')
+//                def snapshotsRepoUrl = layout.buildDirectory.dir('repos/snapshots')
+//                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+//                credentials {
+//                    username NEXUS_USERNAME
+//                    password NEXUS_PASSWORD
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//task cleanBuildPublishLocal(type: GradleBuild) {
+//    tasks = ['clean', 'build', 'publishToMavenLocal']
+//}
+//
+//task cleanBuildPublish(type: GradleBuild) {
+//    tasks = ['clean', 'build', 'publish']
+//}
+//
+//signing {
+//    sign configurations.archives
+//}
+//
+//javadoc {
+//    if(JavaVersion.current().isJava9Compatible()) {
+//        options.addBooleanOption('html5', true)
+//    }
+//}
