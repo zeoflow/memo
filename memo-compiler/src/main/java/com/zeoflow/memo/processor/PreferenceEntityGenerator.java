@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 zeoflow
+ * Copyright (C) 2022 ZeoFlow
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,14 @@
 
 package com.zeoflow.memo.processor;
 
+import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.CHANGED_LISTENER_PREFIX;
+import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.getChangeListenerFieldName;
+import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.zeoflow.jx.file.ClassName;
 import com.zeoflow.jx.file.FieldSpec;
@@ -31,25 +37,15 @@ import com.zeoflow.memo.Memo;
 import com.zeoflow.memo.NoEncryption;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.util.Elements;
 
-import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.CHANGED_LISTENER_PREFIX;
-import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.getChangeListenerFieldName;
-import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
-import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
-
 @SuppressWarnings({"WeakerAccess", "SpellCheckingInspection", "SimplifyStreamApiCallChains"})
-public class PreferenceEntityGenerator
-{
+public class PreferenceEntityGenerator {
 
     private static final String CLAZZ_PREFIX = "_MemoEntity";
     private static final String FIELD_INSTANCE = "instance";
@@ -61,20 +57,16 @@ public class PreferenceEntityGenerator
     private final Elements annotatedElementUtils;
 
     public PreferenceEntityGenerator(
-            @NonNull PreferenceEntityAnnotatedClass annotatedClass, @NonNull Elements elementUtils)
-    {
+            @NonNull PreferenceEntityAnnotatedClass annotatedClass, @NonNull Elements elementUtils) {
         this.annotatedClazz = annotatedClass;
         this.annotatedElementUtils = elementUtils;
     }
 
-    public TypeSpec generate()
-    {
+    public TypeSpec generate() {
         StringBuilder className = new StringBuilder(getClazzName());
-        if(annotatedClazz.typeParameters.size() != 0)
-        {
+        if (annotatedClazz.typeParameters.size() != 0) {
             className.append("<");
-            for (String typeParameter : annotatedClazz.typeParameters)
-            {
+            for (String typeParameter : annotatedClazz.typeParameters) {
                 className.append(typeParameter).append(",");
             }
             className.delete(className.length() - 1, className.length());
@@ -88,11 +80,9 @@ public class PreferenceEntityGenerator
                         .superclass(ClassName.get(annotatedClazz.annotatedElement))
                         .addFields(getFieldSpecs());
 
-        if (annotatedClazz.isDefaultPreference)
-        {
+        if (annotatedClazz.isDefaultPreference) {
             builder.addMethods(addDefaultPreferenceConstructorsSpec());
-        } else
-        {
+        } else {
             builder.addMethods(addConstructorsSpec());
         }
 
@@ -113,18 +103,14 @@ public class PreferenceEntityGenerator
         return builder.build();
     }
 
-    private List<FieldSpec> getLiveDataFieldSpecs()
-    {
+    private List<FieldSpec> getLiveDataFieldSpecs() {
         List<FieldSpec> fieldSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isObservable)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isObservable) {
                 continue;
             }
             TypeName typeName = ParameterSpec.builder(keyField.typeName, keyField.keyName.toLowerCase()).build().type;
-            switch (keyField.typeStringName)
-            {
+            switch (keyField.typeStringName) {
                 case "Boolean":
                     typeName = TypeName.get(Boolean.class);
                     break;
@@ -146,14 +132,15 @@ public class PreferenceEntityGenerator
                     keyField.keyName + "Observable",
                     Modifier.PRIVATE,
                     FINAL)
+                    .addAnnotation(NonNull.class)
                     .initializer("new MutableLiveData<>()")
                     .build()
             );
         }
         return fieldSpecs;
     }
-    private List<FieldSpec> getFieldSpecs()
-    {
+
+    private List<FieldSpec> getFieldSpecs() {
         List<FieldSpec> fieldSpecs = new ArrayList<>();
         fieldSpecs.add(FieldSpec.builder(getClassType(), FIELD_INSTANCE, PRIVATE, STATIC).build());
         FieldSpec.Builder encryptionField = FieldSpec.builder(
@@ -166,8 +153,8 @@ public class PreferenceEntityGenerator
         fieldSpecs.add(encryptionField.build());
         return fieldSpecs;
     }
-    private List<MethodSpec> addConstructorsSpec()
-    {
+
+    private List<MethodSpec> addConstructorsSpec() {
         List<MethodSpec> methods = new ArrayList<>();
         MethodSpec autoConstructor = MethodSpec.constructorBuilder()
                 .addModifiers(PRIVATE)
@@ -182,16 +169,14 @@ public class PreferenceEntityGenerator
                                 .addAnnotation(NonNull.class)
                                 .build()
                 );
-        if (annotatedClazz.isEncryption)
-        {
+        if (annotatedClazz.isEncryption) {
             constructor.addStatement(
                     "$T.init().setEncryption(new $T($N)).build()",
                     Memo.class,
                     ConcealEncryption.class,
                     FIELD_ENCRYPTION_KEY
             );
-        } else
-        {
+        } else {
             constructor.addStatement(
                     "$T.init().setEncryption(new $T()).build()",
                     Memo.class,
@@ -201,8 +186,8 @@ public class PreferenceEntityGenerator
         methods.add(constructor.build());
         return methods;
     }
-    private List<MethodSpec> addDefaultPreferenceConstructorsSpec()
-    {
+
+    private List<MethodSpec> addDefaultPreferenceConstructorsSpec() {
         List<MethodSpec> methods = new ArrayList<>();
         MethodSpec autoConstructor = MethodSpec.constructorBuilder()
                 .addModifiers(PRIVATE)
@@ -220,11 +205,12 @@ public class PreferenceEntityGenerator
         methods.add(constructor);
         return methods;
     }
-    private List<MethodSpec> addInstancesSpec()
-    {
+
+    private List<MethodSpec> addInstancesSpec() {
         List<MethodSpec> methods = new ArrayList<>();
         MethodSpec autoInstance = MethodSpec.methodBuilder("getInstance")
                 .addModifiers(PUBLIC, STATIC)
+                .addAnnotation(NonNull.class)
                 .addJavadoc("getContext() - the context is retrieved from StorageApplication")
                 .addStatement("if ($N != null) return $N", FIELD_INSTANCE, FIELD_INSTANCE)
                 .addStatement("$N = new $N()", FIELD_INSTANCE, getClazzName())
@@ -234,6 +220,7 @@ public class PreferenceEntityGenerator
         methods.add(autoInstance);
         MethodSpec instance = MethodSpec.methodBuilder("getInstance")
                 .addModifiers(PUBLIC, STATIC)
+                .addAnnotation(NonNull.class)
                 .addParameter(
                         ParameterSpec.builder(getContextPackageType(), CONSTRUCTOR_CONTEXT)
                                 .addAnnotation(NonNull.class)
@@ -247,8 +234,7 @@ public class PreferenceEntityGenerator
         return methods;
     }
 
-    private List<MethodSpec> getFieldMethodSpecs()
-    {
+    private List<MethodSpec> getFieldMethodSpecs() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
         this.annotatedClazz.keyFields.stream().forEach(
                 annotatedFields ->
@@ -262,17 +248,15 @@ public class PreferenceEntityGenerator
         return methodSpecs;
     }
 
-    private List<MethodSpec> getCompoundsGetter()
-    {
+    private List<MethodSpec> getCompoundsGetter() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
-        for (Map.Entry<String[], ExecutableElement> entry : this.annotatedClazz.getterCompoundFunctionsList.entrySet())
-        {
+        for (Map.Entry<String[], ExecutableElement> entry : this.annotatedClazz.getterCompoundFunctionsList.entrySet()) {
             methodSpecs.add(generateCompoundGetter(entry));
         }
         return methodSpecs;
     }
-    private MethodSpec generateCompoundGetter(Map.Entry<String[], ExecutableElement> entry)
-    {
+
+    private MethodSpec generateCompoundGetter(Map.Entry<String[], ExecutableElement> entry) {
         ExecutableElement element = entry.getValue();
         MethodSpec.Builder builder = MethodSpec.methodBuilder(
                 element.getSimpleName().toString()
@@ -282,38 +266,30 @@ public class PreferenceEntityGenerator
         return builder.build();
     }
 
-    private String getGetterStatement(ExecutableElement element, String[] params)
-    {
+    private String getGetterStatement(ExecutableElement element, String[] params) {
         StringBuilder content = new StringBuilder("super." + element.getSimpleName().toString() + "(");
-        for(String param: params)
-        {
+        for (String param : params) {
             PreferenceKeyField preferenceParam = null;
-            for (PreferenceKeyField preferenceKeyField: this.annotatedClazz.keyFields)
-            {
-                if (preferenceKeyField.keyName.equals(param))
-                {
+            for (PreferenceKeyField preferenceKeyField : this.annotatedClazz.keyFields) {
+                if (preferenceKeyField.keyName.equals(param)) {
                     preferenceParam = preferenceKeyField;
                     break;
                 }
             }
-            if(preferenceParam != null)
-            {
-                if (preferenceParam.value instanceof String)
-                {
+            if (preferenceParam != null) {
+                if (preferenceParam.value instanceof String) {
                     content.append("Memo.get(\"")
                             .append(preferenceParam.keyName)
                             .append("\", \"")
                             .append(preferenceParam.value)
                             .append("\")");
-                } else if (preferenceParam.value instanceof Float)
-                {
+                } else if (preferenceParam.value instanceof Float) {
                     content.append("Memo.get(\"")
                             .append(preferenceParam.keyName)
                             .append("\", ")
                             .append(preferenceParam.value)
                             .append("f)");
-                } else
-                {
+                } else {
                     content.append("Memo.get(\"")
                             .append(preferenceParam.keyName)
                             .append("\", ")
@@ -329,18 +305,16 @@ public class PreferenceEntityGenerator
         return content + ")";
     }
 
-    private MethodSpec getClearMethodSpec()
-    {
+    private MethodSpec getClearMethodSpec() {
         return MethodSpec.methodBuilder("clear")
                 .addModifiers(PUBLIC)
                 .addStatement("$T.deleteAll()", Memo.class)
                 .build();
     }
 
-    private MethodSpec getKeyNameListMethodSpec()
-    {
+    private MethodSpec getKeyNameListMethodSpec() {
         MethodSpec.Builder builder =
-                MethodSpec.methodBuilder("get" + KEY_NAME_LIST)
+                MethodSpec.methodBuilder("get" + StringUtils.toUpperCamel(KEY_NAME_LIST))
                         .addModifiers(PUBLIC)
                         .returns(List.class)
                         .addStatement("List<String> $N = new $T<>()", KEY_NAME_LIST, ArrayList.class);
@@ -348,26 +322,24 @@ public class PreferenceEntityGenerator
         this.annotatedClazz.keyNameFields.stream().forEach(
                 keyName -> builder.addStatement("$N.add($S)", KEY_NAME_LIST, keyName));
 
+        builder.addAnnotation(NonNull.class);
         builder.addStatement("return $N", KEY_NAME_LIST);
         return builder.build();
     }
 
-    private MethodSpec getEntityNameMethodSpec()
-    {
+    private MethodSpec getEntityNameMethodSpec() {
         return MethodSpec.methodBuilder("getEntityName")
                 .addModifiers(PUBLIC)
                 .returns(String.class)
+                .addAnnotation(NonNull.class)
                 .addStatement("return $S", annotatedClazz.entityName)
                 .build();
     }
 
-    private List<TypeSpec> getOnChangedTypeSpecs()
-    {
+    private List<TypeSpec> getOnChangedTypeSpecs() {
         List<TypeSpec> typeSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isListener)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isListener) {
                 continue;
             }
             PreferenceChangeListenerGenerator changeListenerGenerator =
@@ -377,13 +349,10 @@ public class PreferenceEntityGenerator
         return typeSpecs;
     }
 
-    private List<FieldSpec> getOnChangedFieldSpecs()
-    {
+    private List<FieldSpec> getOnChangedFieldSpecs() {
         List<FieldSpec> fieldSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isListener)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isListener) {
                 continue;
             }
             PreferenceChangeListenerGenerator changeListenerGenerator =
@@ -393,26 +362,23 @@ public class PreferenceEntityGenerator
         return fieldSpecs;
     }
 
-    private List<MethodSpec> getAddOnChangedListenerSpecs()
-    {
+    private List<MethodSpec> getAddOnChangedListenerSpecs() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isListener)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isListener) {
                 continue;
             }
-            String onChangeListener =
-                    keyField.keyName + CHANGED_LISTENER_PREFIX;
+            String onChangeListener = keyField.keyName + CHANGED_LISTENER_PREFIX;
             PreferenceChangeListenerGenerator changeListenerGenerator =
                     new PreferenceChangeListenerGenerator(keyField);
             MethodSpec.Builder builder =
                     MethodSpec.methodBuilder("add" + StringUtils.toUpperCamel(onChangeListener))
                             .addModifiers(PUBLIC)
                             .addParameter(
-                                    ParameterSpec.builder(
-                                            changeListenerGenerator.getInterfaceType(getClazzName()), "listener")
-                                            .build())
+                                    ParameterSpec.builder(changeListenerGenerator.getInterfaceType(
+                                            getClazzName()), "listener"
+                                    ).addAnnotation(NonNull.class).build()
+                            )
                             .addStatement(getChangeListenerFieldName(keyField.keyName) + ".add(listener)")
                             .returns(void.class);
             methodSpecs.add(builder.build());
@@ -420,13 +386,10 @@ public class PreferenceEntityGenerator
         return methodSpecs;
     }
 
-    private List<MethodSpec> getRemoveOnChangedListenerSpecs()
-    {
+    private List<MethodSpec> getRemoveOnChangedListenerSpecs() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isListener)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isListener) {
                 continue;
             }
             String onChangeListener =
@@ -437,9 +400,10 @@ public class PreferenceEntityGenerator
                     MethodSpec.methodBuilder("remove" + StringUtils.toUpperCamel(onChangeListener))
                             .addModifiers(PUBLIC)
                             .addParameter(
-                                    ParameterSpec.builder(
-                                            changeListenerGenerator.getInterfaceType(getClazzName()), "listener")
-                                            .build())
+                                    ParameterSpec.builder(changeListenerGenerator.getInterfaceType(
+                                            getClazzName()), "listener"
+                                    ).addAnnotation(NonNull.class).build()
+                            )
                             .addStatement(getChangeListenerFieldName(keyField.keyName) + ".remove(listener)")
                             .returns(void.class);
             methodSpecs.add(builder.build());
@@ -447,13 +411,10 @@ public class PreferenceEntityGenerator
         return methodSpecs;
     }
 
-    private List<MethodSpec> getClearOnChangedListenerSpecs()
-    {
+    private List<MethodSpec> getClearOnChangedListenerSpecs() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
-        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields)
-        {
-            if (!keyField.isListener)
-            {
+        for (PreferenceKeyField keyField : this.annotatedClazz.keyFields) {
+            if (!keyField.isListener) {
                 continue;
             }
             String onChangeListener =
@@ -468,23 +429,19 @@ public class PreferenceEntityGenerator
         return methodSpecs;
     }
 
-    private ClassName getClassType()
-    {
+    private ClassName getClassType() {
         return ClassName.get(annotatedClazz.packageName, getClazzName());
     }
 
-    private String getClazzName()
-    {
+    private String getClazzName() {
         return annotatedClazz.entityName + CLAZZ_PREFIX;
     }
 
-    private TypeName getContextPackageType()
-    {
+    private TypeName getContextPackageType() {
         return TypeName.get(annotatedElementUtils.getTypeElement(PACKAGE_CONTEXT).asType());
     }
 
-    private ClassName getMutableLiveDataClass()
-    {
+    private ClassName getMutableLiveDataClass() {
         return ClassName.get("androidx.lifecycle", "MutableLiveData");
     }
 
