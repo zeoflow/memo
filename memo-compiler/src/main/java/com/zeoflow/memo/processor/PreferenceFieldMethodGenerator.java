@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 zeoflow
+ * Copyright (C) 2022 ZeoFlow SRL
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package com.zeoflow.memo.processor;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.zeoflow.jx.file.ClassName;
@@ -101,14 +102,24 @@ public class PreferenceFieldMethodGenerator
     {
         MethodSpec.Builder builder =
                 MethodSpec.methodBuilder(getGetterPrefixName())
-                        .addModifiers(PUBLIC)
-                        .addAnnotation(Nullable.class);
-        builder.addStatement(
-                "return " + getGetterStatement(),
-                "Memo",
-                keyField.keyName,
-                keyField.value
-        );
+                        .addModifiers(PUBLIC);
+        if (keyField.value != null) {
+            builder.addAnnotation(NonNull.class);
+            builder.addStatement(
+                    "return " + getGetterStatement(),
+                    "Memo",
+                    keyField.keyName,
+                    keyField.value
+            );
+        } else {
+            builder.addAnnotation(Nullable.class);
+            builder.addStatement(
+                    "return " + getGetterStatement(),
+                    "Memo",
+                    keyField.keyName,
+                    null
+            );
+        }
         builder.returns(keyField.typeName);
         return builder.build();
     }
@@ -144,6 +155,7 @@ public class PreferenceFieldMethodGenerator
     {
         return MethodSpec.methodBuilder(getKeyNamePostfixName())
                 .addModifiers(PUBLIC)
+                .addAnnotation(NonNull.class)
                 .returns(String.class)
                 .addStatement("return $S", keyField.keyName)
                 .build();
@@ -153,6 +165,7 @@ public class PreferenceFieldMethodGenerator
     {
         return MethodSpec.methodBuilder(getContainsPrefixName())
                 .addModifiers(PUBLIC)
+                .addAnnotation(NonNull.class)
                 .addStatement("return $N.contains($S)", preference, keyField.keyName)
                 .returns(boolean.class)
                 .build();
