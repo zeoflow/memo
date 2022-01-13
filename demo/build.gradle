@@ -21,9 +21,9 @@ dependencies {
     annotationProcessor project(path: ':memo-compiler')
 
     implementation("com.zeoflow:zson:1.3.0")
-    implementation("com.zeoflow:flow-kit:1.5.0")
-    implementation("com.zeoflow:material-elements:2.4.1")
+    implementation('com.zeoflow:flow-kit:1.6.2')
+    implementation('com.zeoflow:material-elements:2.5.0')
 
-    implementation("com.zeoflow:parcelled-runtime:1.1.0")
-    annotationProcessor("com.zeoflow:parcelled-compiler:1.1.0")
+    implementation('com.zeoflow:parcelled-runtime:1.1.1')
+    annotationProcessor('com.zeoflow:parcelled-compiler:1.1.1')
 }
