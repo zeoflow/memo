@@ -38,8 +38,10 @@ public class PreferenceKeyField
     public final TypeName typeName;
     public final String clazzName;
     public String typeStringName;
+    public String variableName;
     public String keyName;
     public Object value;
+    public boolean isFinal;
 
     public boolean isObjectField = false;
     public boolean isObservable = false;
@@ -57,6 +59,8 @@ public class PreferenceKeyField
         this.typeName = TypeName.get(variableElement.asType());
         this.clazzName = variableElement.getSimpleName().toString();
         this.value = variableElement.getConstantValue();
+        this.variableName = variableElement.getSimpleName().toString();
+        this.isFinal = variableElement.getModifiers().contains(Modifier.FINAL);
         setTypeStringName();
 
         if (annotation_keyName != null)
@@ -108,7 +112,7 @@ public class PreferenceKeyField
             this.typeStringName = "String";
         } else
         {
-            this.typeStringName = "String";
+            this.typeStringName = "Object";
             this.isObjectField = true;
         }
     }
