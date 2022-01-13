@@ -16,6 +16,9 @@
 
 package com.zeoflow.memo.processor;
 
+import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.getChangeListenerFieldName;
+import static javax.lang.model.element.Modifier.PUBLIC;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -28,12 +31,8 @@ import com.zeoflow.jx.file.TypeName;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.zeoflow.memo.processor.PreferenceChangeListenerGenerator.getChangeListenerFieldName;
-import static javax.lang.model.element.Modifier.PUBLIC;
-
 @SuppressWarnings({"WeakerAccess", "SpellCheckingInspection"})
-public class PreferenceFieldMethodGenerator
-{
+public class PreferenceFieldMethodGenerator {
 
     private static final String SETTER_PREFIX = "put";
     private static final String GETTER_PREFIX = "get";
@@ -46,20 +45,17 @@ public class PreferenceFieldMethodGenerator
 
     public PreferenceFieldMethodGenerator(
             PreferenceKeyField keyField,
-            PreferenceEntityAnnotatedClass annotatedClass)
-    {
+            PreferenceEntityAnnotatedClass annotatedClass) {
         this.keyField = keyField;
         this.annotatedEntityClazz = annotatedClass;
     }
 
-    public List<MethodSpec> getFieldMethods()
-    {
+    public List<MethodSpec> getFieldMethods() {
         List<MethodSpec> methodSpecs = new ArrayList<>();
 
         methodSpecs.add(generateGetter());
         methodSpecs.add(generateSetter());
-        if (keyField.isObservable)
-        {
+        if (keyField.isObservable) {
             methodSpecs.add(generateObserver());
         }
         methodSpecs.add(generateObjectKeyNameSpec());
@@ -68,11 +64,9 @@ public class PreferenceFieldMethodGenerator
         return methodSpecs;
     }
 
-    private MethodSpec generateObserver()
-    {
+    private MethodSpec generateObserver() {
         TypeName typeName = ParameterSpec.builder(keyField.typeName, keyField.keyName.toLowerCase()).build().type;
-        switch (keyField.typeStringName)
-        {
+        switch (keyField.typeStringName) {
             case "Boolean":
                 typeName = TypeName.get(Boolean.class);
                 break;
@@ -98,18 +92,34 @@ public class PreferenceFieldMethodGenerator
         return builder.build();
     }
 
-    private MethodSpec generateGetter()
-    {
-        MethodSpec.Builder builder =
-                MethodSpec.methodBuilder(getGetterPrefixName())
-                        .addModifiers(PUBLIC);
+    private MethodSpec generateGetter() {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder(getGetterPrefixName())
+                .addModifiers(PUBLIC);
         if (keyField.value != null) {
+            builder.addAnnotation(NonNull.class);
+            if (keyField.value instanceof Long) {
+                builder.addStatement(
+                        "return " + getGetterStatement(),
+                        "Memo",
+                        keyField.keyName,
+                        keyField.value + "L"
+                );
+            } else {
+                builder.addStatement(
+                        "return " + getGetterStatement(),
+                        "Memo",
+                        keyField.keyName,
+                        keyField.value
+                );
+            }
+        } else if (keyField.isFinal) {
             builder.addAnnotation(NonNull.class);
             builder.addStatement(
                     "return " + getGetterStatement(),
                     "Memo",
                     keyField.keyName,
-                    keyField.value
+                    keyField.variableName
             );
         } else {
             builder.addAnnotation(Nullable.class);
@@ -124,8 +134,7 @@ public class PreferenceFieldMethodGenerator
         return builder.build();
     }
 
-    private MethodSpec generateSetter()
-    {
+    private MethodSpec generateSetter() {
         MethodSpec.Builder builder =
                 MethodSpec.methodBuilder(getSetterPrefixName())
                         .addModifiers(PUBLIC)
@@ -135,24 +144,20 @@ public class PreferenceFieldMethodGenerator
                 keyField.keyName,
                 keyField.keyName.toLowerCase()
         );
-        if (keyField.isObservable)
-        {
+        if (keyField.isObservable) {
             builder.addStatement(getOnLiveDataStatement());
         }
-        if (keyField.isListener)
-        {
+        if (keyField.isListener) {
             builder.addStatement(getOnChangedStatement());
         }
         return builder.build();
     }
 
-    private String getOnLiveDataStatement()
-    {
+    private String getOnLiveDataStatement() {
         return keyField.keyName + "Observable.setValue(" + keyField.keyName.toLowerCase() + ")";
     }
 
-    private MethodSpec generateObjectKeyNameSpec()
-    {
+    private MethodSpec generateObjectKeyNameSpec() {
         return MethodSpec.methodBuilder(getKeyNamePostfixName())
                 .addModifiers(PUBLIC)
                 .addAnnotation(NonNull.class)
@@ -161,8 +166,7 @@ public class PreferenceFieldMethodGenerator
                 .build();
     }
 
-    private MethodSpec generateContainsSpec()
-    {
+    private MethodSpec generateContainsSpec() {
         return MethodSpec.methodBuilder(getContainsPrefixName())
                 .addModifiers(PUBLIC)
                 .addAnnotation(NonNull.class)
@@ -171,8 +175,7 @@ public class PreferenceFieldMethodGenerator
                 .build();
     }
 
-    private MethodSpec generateRemoveSpec()
-    {
+    private MethodSpec generateRemoveSpec() {
         return MethodSpec.methodBuilder(getRemovePrefixName())
                 .addModifiers(PUBLIC)
                 .addStatement(
@@ -180,79 +183,61 @@ public class PreferenceFieldMethodGenerator
                 .build();
     }
 
-    private String getGetterPrefixName()
-    {
+    private String getGetterPrefixName() {
         return GETTER_PREFIX + StringUtils.toUpperCamel(this.keyField.keyName);
     }
 
-    private String getSetterPrefixName()
-    {
+    private String getSetterPrefixName() {
         return SETTER_PREFIX + StringUtils.toUpperCamel(this.keyField.keyName);
     }
 
-    private String getKeyNamePostfixName()
-    {
+    private String getKeyNamePostfixName() {
         return this.keyField.keyName + KEYNAME_POSTFIX;
     }
 
-    private String getContainsPrefixName()
-    {
+    private String getContainsPrefixName() {
         return HAS_PREFIX + StringUtils.toUpperCamel(this.keyField.keyName);
     }
 
-    private String getRemovePrefixName()
-    {
+    private String getRemovePrefixName() {
         return REMOVE_PREFIX + StringUtils.toUpperCamel(this.keyField.keyName);
     }
 
-    private String getGetterStatement()
-    {
-        if (annotatedEntityClazz.getterFunctionsList.containsKey(keyField.keyName))
-        {
+    private String getGetterStatement() {
+        if (annotatedEntityClazz.getterFunctionsList.containsKey(keyField.keyName)) {
             String superMethodName =
                     annotatedEntityClazz.getterFunctionsList.get(keyField.keyName).getSimpleName().toString();
-            if (keyField.value instanceof String)
-            {
+            if (keyField.value instanceof String) {
                 return String.format("super.%s($N.get($S, $S))", superMethodName);
-            } else if (keyField.value instanceof Float)
-            {
+            } else if (keyField.value instanceof Float) {
                 return String.format(
                         "super.%s($N.get($S, $Lf))", superMethodName);
-            } else
-            {
+            } else {
                 return String.format(
                         "super.%s($N.get($S, $L))", superMethodName);
             }
-        } else
-        {
-            if (keyField.value instanceof String)
-            {
+        } else {
+            if (keyField.value instanceof String) {
                 return "$N.get($S, $S)";
-            } else if (keyField.value instanceof Float)
-            {
+            } else if (keyField.value instanceof Float) {
                 return "$N.get($S, $Lf)";
-            } else
-            {
+            } else {
                 return "$N.get($S, $L)";
             }
         }
     }
 
-    private String getSetterStatement()
-    {
-        if (annotatedEntityClazz.setterFunctionsList.containsKey(keyField.keyName))
-        {
+    private String getSetterStatement() {
+        if (annotatedEntityClazz.setterFunctionsList.containsKey(keyField.keyName)) {
             return String.format(
                     "Memo.put($S, super.%s($N))",
                     annotatedEntityClazz.setterFunctionsList.get(keyField.keyName).getSimpleName());
-        } else
-        {
+        } else {
             return "Memo.put($S, $N)";
         }
     }
 
-    private String getOnChangedStatement()
-    {
+    private String getOnChangedStatement() {
         String onChangeListener = getChangeListenerFieldName(keyField.keyName);
         PreferenceChangeListenerGenerator generator = new PreferenceChangeListenerGenerator(keyField);
         return "if ("
@@ -271,8 +256,7 @@ public class PreferenceFieldMethodGenerator
                 + ")";
     }
 
-    private String getObserverName()
-    {
+    private String getObserverName() {
         return this.keyField.keyName + "Observer";
     }
 
