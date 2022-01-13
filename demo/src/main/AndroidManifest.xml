@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
+            android:exported="true"
             android:name="com.zeoflow.demo.MainActivity"
             android:theme="@style/AppTheme">
             <intent-filter>
