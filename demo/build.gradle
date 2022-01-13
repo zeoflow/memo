@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
     compileSdk 31
@@ -6,8 +8,8 @@ android {
         applicationId "com.zeoflow.memo.demo"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 10
+        versionName "1.2.0"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
