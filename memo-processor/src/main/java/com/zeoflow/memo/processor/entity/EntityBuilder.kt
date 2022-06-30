@@ -127,7 +127,7 @@ class EntityBuilder(
                             "return %T().get(%T[%S, field])",
                             getType(field.functionsType!!.typeName),
                             types.Memo(),
-                            field.keyName
+                            field.storeKeyName
                         )
                         .build()
                 )
@@ -136,7 +136,7 @@ class EntityBuilder(
                 .addStatement(
                     "%T.put(%S, %T().set(value))",
                     types.Memo(),
-                    field.keyName,
+                    field.storeKeyName,
                     getType(field.functionsType!!.typeName)
                 )
             if (field.isObservable) {
@@ -156,7 +156,7 @@ class EntityBuilder(
                         .addStatement(
                             "return %T[%S, field]",
                             types.Memo(),
-                            field.keyName
+                            field.storeKeyName
                         )
                         .build()
                 )
@@ -165,7 +165,7 @@ class EntityBuilder(
                 .addStatement(
                     "%T.put(%S, value)",
                     types.Memo(),
-                    field.keyName
+                    field.storeKeyName
                 )
             if (field.isObservable) {
                 funcSetter.addStatement(

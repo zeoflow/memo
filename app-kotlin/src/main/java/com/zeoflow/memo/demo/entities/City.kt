@@ -23,6 +23,7 @@ data class City(
     @Observable
     val country: String,
 
+    @KeyName("population_count")
     @Observable
     @Default(PopulationDefault::class)
     val population: Int,
