@@ -67,4 +67,11 @@ class JavaClassTypes : ClassTypes() {
         )
     }
 
+    override fun Inject(): Any {
+        return ClassName.get(
+            "javax.inject",
+            "Inject"
+        )
+    }
+
 }
