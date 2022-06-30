@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="11" />
+    <bytecodeTargetLevel target="1.8">
+      <module name="Kotlin_Processor.app" target="11" />
+      <module name="Kotlin_Processor.app-java" target="11" />
+      <module name="Kotlin_Processor.app-kotlin" target="11" />
+      <module name="Kotlin_Processor.lib-common.main" target="11" />
+      <module name="Kotlin_Processor.lib-common.test" target="11" />
+      <module name="Kotlin_Processor.lib-compiler-ktx" target="11" />
+      <module name="Kotlin_Processor.lib-compiler-ktx.main" target="11" />
+      <module name="Kotlin_Processor.lib-compiler-ktx.test" target="11" />
+      <module name="Kotlin_Processor.lib-compiler.main" target="11" />
+      <module name="Kotlin_Processor.lib-compiler.test" target="11" />
+      <module name="Kotlin_Processor.lib-processor.main" target="11" />
+      <module name="Kotlin_Processor.lib-processor.test" target="11" />
+      <module name="Kotlin_Processor.lib-runtime" target="11" />
+      <module name="Kotlin_Processor.memo" target="11" />
+      <module name="Kotlin_Processor.memo-common" target="11" />
+      <module name="Kotlin_Processor.memo-common.main" target="11" />
+      <module name="Kotlin_Processor.memo-common.test" target="11" />
+      <module name="Kotlin_Processor.memo-compiler" target="11" />
+      <module name="Kotlin_Processor.memo-compiler-ktx" target="11" />
+      <module name="Kotlin_Processor.memo-compiler-ktx.main" target="11" />
+      <module name="Kotlin_Processor.memo-compiler-ktx.test" target="11" />
+      <module name="Kotlin_Processor.memo-compiler.main" target="11" />
+      <module name="Kotlin_Processor.memo-compiler.test" target="11" />
+      <module name="Kotlin_Processor.memo-processor" target="11" />
+      <module name="Kotlin_Processor.memo-processor.main" target="11" />
+      <module name="Kotlin_Processor.memo-processor.test" target="11" />
+      <module name="Kotlin_Processor.memo-runtime" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

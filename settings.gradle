@@ -12,11 +12,21 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+rootProject.name = "Memo-KTX"
 
-rootProject.name = "Memo"
+/**
+ * APP MODULES (DEMOS)
+ */
+include ':app-java'
+include ':app-kotlin'
 
-include ':demo'
-
+/**
+ * LIBRARY MODULES
+ */
 include ':memo'
-include ':memo-annotation'
+include ':memo-common'
 include ':memo-compiler'
+include ':memo-compiler-ktx'
+include ':memo-compiler-processing'
+include ':memo-processor'
+include ':memo-runtime'

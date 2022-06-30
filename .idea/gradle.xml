@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app-java" />
+            <option value="$PROJECT_DIR$/app-kotlin" />
+            <option value="$PROJECT_DIR$/buildSrc" />
+            <option value="$PROJECT_DIR$/memo" />
+            <option value="$PROJECT_DIR$/memo-common" />
+            <option value="$PROJECT_DIR$/memo-compiler" />
+            <option value="$PROJECT_DIR$/memo-compiler-ktx" />
+            <option value="$PROJECT_DIR$/memo-compiler-processing" />
+            <option value="$PROJECT_DIR$/memo-processor" />
+            <option value="$PROJECT_DIR$/memo-runtime" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

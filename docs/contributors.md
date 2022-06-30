@@ -6,11 +6,11 @@
 <!-- markdownlint-disable -->
 ### :zap: Contributors List :zap:
 <p float="left">
-<a href="#pushpin-teodor-g-teodorhmx1"><img width="100" src="https://avatars.githubusercontent.com/u/22307006?v=4" hspace=5 title='Teodor G. (@TeodorHMX1) - click for details about the contributions'></a>
+<a href="#pushpin-teodor-g-teogor"><img width="100" src="https://avatars.githubusercontent.com/u/22307006?v=4" hspace=5 title='Teodor G. (@teogor) - click for details about the contributions'></a>
 </p>
 
 ---
-### :pushpin: Teodor G. ([@TeodorHMX1](https://github.com/TeodorHMX1))
+### :pushpin: Teodor G. ([@teogor](https://github.com/teogor))
 #### Contributions:
 - :bust_in_silhouette::computer: Code
 - :open_book::pencil2: Documentation

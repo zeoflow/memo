@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: "[Component name] Short description of issue"
 labels: '@bug'
-assignees: 'TeodorHMX1'
+assignees: 'teogor'
 
 ---
 

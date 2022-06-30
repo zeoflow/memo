@@ -1,0 +1,35 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id("kotlin")
+    id 'com.vanniktech.maven.publish'
+}
+
+dependencies {
+    implementation implementation(project(':memo-common',))
+    implementation(project(":memo-compiler-processing"))
+
+    implementation("com.zeoflow:jx:1.2.1")
+
+    implementation 'com.squareup:javapoet:1.13.0'
+    implementation 'com.squareup:kotlinpoet:1.12.0'
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.7.0")
+    implementation("com.google.auto:auto-common:1.2")
+    implementation("com.google.auto.value:auto-value-annotations:1.6.3")
+    implementation("com.squareup:javapoet:1.13.0")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.5.0-1.0.0-alpha10")
+
+    implementation("org.xerial:sqlite-jdbc:3.34.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.3.0")
+    implementation("commons-codec:commons-codec:1.11")
+    implementation("com.intellij:annotations:12.0")
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn",
+                             "-Xopt-in=kotlin.contracts.ExperimentalContracts",
+                             "-Xopt-in=com.zeoflow.memo.compiler.processing.ExperimentalProcessingApi"]
+    }
+}

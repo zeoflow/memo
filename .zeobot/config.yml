@@ -15,8 +15,7 @@ zeobot:
     # write down the users with access to restricted commands
     listen_to:
       users:
-        - TeodorHMX1
-        - Teogor
+        - teogor
   # zeobot's features
   features:
     # if enabled, zeobot will post comments
@@ -36,11 +35,9 @@ auto_assign:
   review_groups:
   assignee_groups:
   reviewers_to_add:
-    - TeodorHMX1
-    - Teogor
+    - teogor
   assignees_to_add:
-    - TeodorHMX1
-    - Teogor
+    - teogor
   skip_keywords:
 
 # Autodelete Merged Branches (AMB)
@@ -77,8 +74,7 @@ enforce_branch_merge:
     - main
   # who has the right to write to protected branches
   give_access_to:
-    - TeodorHMX1
-    - Teogor
+    - teogor
 
 # License Checker (LC)
 # branches that contains files without license will not be merged
