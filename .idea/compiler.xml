@@ -29,6 +29,25 @@
       <module name="Kotlin_Processor.memo-processor.main" target="11" />
       <module name="Kotlin_Processor.memo-processor.test" target="11" />
       <module name="Kotlin_Processor.memo-runtime" target="11" />
+      <module name="Memo-KTX.app-java" target="11" />
+      <module name="Memo-KTX.app-kotlin" target="11" />
+      <module name="Memo-KTX.buildSrc" target="11" />
+      <module name="Memo-KTX.buildSrc.main" target="11" />
+      <module name="Memo-KTX.buildSrc.test" target="11" />
+      <module name="Memo-KTX.memo" target="11" />
+      <module name="Memo-KTX.memo-common" target="11" />
+      <module name="Memo-KTX.memo-common.main" target="11" />
+      <module name="Memo-KTX.memo-common.test" target="11" />
+      <module name="Memo-KTX.memo-compiler" target="11" />
+      <module name="Memo-KTX.memo-compiler-ktx" target="11" />
+      <module name="Memo-KTX.memo-compiler-ktx.main" target="11" />
+      <module name="Memo-KTX.memo-compiler-ktx.test" target="11" />
+      <module name="Memo-KTX.memo-compiler.main" target="11" />
+      <module name="Memo-KTX.memo-compiler.test" target="11" />
+      <module name="Memo-KTX.memo-processor" target="11" />
+      <module name="Memo-KTX.memo-processor.main" target="11" />
+      <module name="Memo-KTX.memo-processor.test" target="11" />
+      <module name="Memo-KTX.memo-runtime" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

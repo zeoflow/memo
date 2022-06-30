@@ -3,10 +3,12 @@ package com.zeoflow.memo.demo.entities;
 
 import android.database.Observable;
 
+import com.zeoflow.memo.common.Hilt;
 import com.zeoflow.memo.common.KeyName;
 import com.zeoflow.memo.common.MemoEntity;
 import com.zeoflow.memo.common.MemoFunction;
 
+@Hilt
 @MemoEntity("Country")
 public class Country<T>
 {
