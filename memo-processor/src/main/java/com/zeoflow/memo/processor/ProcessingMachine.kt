@@ -22,6 +22,8 @@ abstract class ClassTypes {
     abstract fun Observer(): Any
     abstract fun LifecycleOwner(): Any
 
+    abstract fun Inject(): Any
+
 }
 
 enum class Language {

@@ -26,6 +26,7 @@ class EntityData(
     val getterCompoundFunctionsList: MutableMap<Array<String>, ExecutableElement>
     var isDefaultPreference = false
     var isEncryption = false
+    var isHilt = false
     var encryptionKey: String? = null
 
     init {
@@ -37,6 +38,9 @@ class EntityData(
         )
         val encryptEntity = annotatedType.getAnnotation(
             com.zeoflow.memo.common.EncryptEntity::class
+        )
+        val hiltEntity = annotatedType.getAnnotation(
+            com.zeoflow.memo.common.Hilt::class
         )
 
         packageName = annotatedType.packageName
@@ -63,6 +67,10 @@ class EntityData(
         if (encryptEntity != null) {
             isEncryption = true
             encryptionKey = encryptEntity.value.value
+        }
+
+        if (hiltEntity != null) {
+            isHilt = true
         }
 //
 //        if (Strings.isNullOrEmpty(entityName)) {

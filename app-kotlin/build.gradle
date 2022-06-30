@@ -34,9 +34,20 @@ android {
 }
 
 dependencies {
+    /**
+     * Memo
+     */
     implementation(project(":memo"))
     implementation(project(":memo-runtime"))
     kapt(project(":memo-compiler-ktx"))
+
+    /**
+     * DI
+     */
+    implementation "com.google.dagger:hilt-android:2.40.5"
+    kapt "com.google.dagger:hilt-android-compiler:2.40.5"
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
 
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'

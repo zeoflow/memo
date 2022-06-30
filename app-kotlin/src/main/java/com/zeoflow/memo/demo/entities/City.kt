@@ -10,7 +10,8 @@ import com.zeoflow.memo.common.*
  * it was annotated with @EncryptEntity("G15y3aV9M8d")
  */
 @MemoEntity
-//@EncryptEntity("G15y3aV9M8d")
+@EncryptEntity("G15y3aV9M8d")
+@Hilt
 data class City(
     @KeyName("name")
     @Default(NameDefault::class)
