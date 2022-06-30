@@ -13,16 +13,18 @@ class EntityField(var xFieldElement: XFieldElement) {
     var functionsType: XType? = null
     val className: ClassName
     val keyName: String
+    val storeKeyName: String
     val isObservable: Boolean
     val isListener: Boolean
 
     init {
-        keyName = if (xFieldElement.hasAnnotation(KeyName::class)) {
+        storeKeyName = if (xFieldElement.hasAnnotation(KeyName::class)) {
             val keyNameAnnotation = xFieldElement.getAnnotation(KeyName::class)!!.value
             keyNameAnnotation.value
         } else {
             xFieldElement.name
         }
+        keyName = xFieldElement.name
         className = getType(xFieldElement.type.typeName)
         isObservable = xFieldElement.hasAnnotation(Observable::class)
         isListener = xFieldElement.hasAnnotation(Listener::class)
