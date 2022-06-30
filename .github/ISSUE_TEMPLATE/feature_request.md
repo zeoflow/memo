@@ -3,7 +3,7 @@ name: Feature request
 about: Suggest an idea for this project
 title: "[Component name] Short description of request"
 labels: '@feature'
-assignees: 'TeodorHMX1'
+assignees: 'teogor'
 
 ---
 

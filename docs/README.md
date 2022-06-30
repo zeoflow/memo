@@ -12,9 +12,9 @@ To use it:
 ```groovy
   allprojects {
     repositories {
-      mavenCentral()
+        mavenCentral()
     }
-  }
+}
 ```
 
 3.  Add the library to the `dependencies` section:
@@ -26,12 +26,12 @@ dependencies {
     def memo_version = "x.y.z"
 
     // Memo Library
-    implementation("com.zeoflow:memo:$memo_version")
+    implementation("com.zeoflow.memo:memo:$memo_version")
     // Required if you want to use the injector
-    implementation("com.zeoflow:memo-annotation:$memo_version")
-    annotationProcessor("com.zeoflow:memo-compiler:$memo_version")
+    implementation("com.zeoflow.memo:memo-runtime:$memo_version")
+    annotationProcessor("com.zeoflow.memo:memo-compiler:$memo_version")
     // For kotlin projects use kapt instead of annotationProcessor
-    kapt("com.zeoflow:memo-compiler:$memo_version")
+    kapt("com.zeoflow.memo:memo-compiler-ktx:$memo_version")
 
     // ...
 }
@@ -285,13 +285,13 @@ userProfile.addLoginListeners(new UserProfile_MemoEntity.LoginIOnChangedListener
 Add observable for the username field
 ```java
 component.userProfile().usernameObserver((LifecycleOwner) this, new Observer<String>()
-{
-    @Override
-    public void onChanged(String username)
-    {
+        {
+@Override
+public void onChanged(String username)
+        {
         // do something here
-    }
-});
+        }
+        });
 ```
 
 ## License
@@ -315,7 +315,7 @@ component.userProfile().usernameObserver((LifecycleOwner) this, new Observer<Str
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <p float="left">
-<a href="docs/contributors.md#pushpin-teodor-g-teodorhmx1"><img width="100" src="https://avatars.githubusercontent.com/u/22307006?v=4" hspace=5 title='Teodor G. (@TeodorHMX1) - click for details about the contributions'></a>
+<a href="docs/contributors.md#pushpin-teodor-g-teogor"><img width="100" src="https://avatars.githubusercontent.com/u/22307006?v=4" hspace=5 title='Teodor G. (@teogor) - click for details about the contributions'></a>
 </p>
 
 <!-- markdownlint-enable -->
