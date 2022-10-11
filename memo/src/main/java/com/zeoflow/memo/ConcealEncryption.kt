@@ -37,11 +37,11 @@ open class ConcealEncryption protected constructor(
 
     @SuppressLint("GetInstance")
     @Throws(Exception::class)
-    override fun encrypt(key: String?, plainText: String): String? {
+    override fun encrypt(key: String?, value: String): String? {
         try {
             val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-            val cipherText = cipher.doFinal(plainText.toByteArray(StandardCharsets.UTF_8))
+            val cipherText = cipher.doFinal(value.toByteArray(StandardCharsets.UTF_8))
             return Base64.encodeToString(cipherText, Base64.NO_WRAP)
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
@@ -59,11 +59,11 @@ open class ConcealEncryption protected constructor(
 
     @SuppressLint("GetInstance")
     @Throws(Exception::class)
-    override fun decrypt(key: String?, cipherText: String?): String {
+    override fun decrypt(key: String?, value: String?): String {
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
         return String(
-            cipher.doFinal(Base64.decode(cipherText, Base64.NO_WRAP)),
+            cipher.doFinal(Base64.decode(value, Base64.NO_WRAP)),
             StandardCharsets.UTF_8
         )
     }
