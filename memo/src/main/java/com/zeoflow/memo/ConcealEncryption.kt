@@ -9,13 +9,11 @@ import java.util.*
 import javax.crypto.*
 import javax.crypto.spec.SecretKeySpec
 
-open class ConcealEncryption protected constructor(
+open class ConcealEncryption constructor(
     private val encryptionKey: String,
-    init: Boolean
 ) : Encryption {
-    private val secretKey: SecretKey?
 
-    constructor(encryptionKey: String) : this(encryptionKey, true)
+    private val secretKey: SecretKey?
 
     init {
         val keyLength = 128
