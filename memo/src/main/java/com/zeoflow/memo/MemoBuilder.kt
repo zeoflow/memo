@@ -55,7 +55,7 @@ class MemoBuilder @JvmOverloads constructor(context: Context = ApplicationInitia
         get() {
             return cryptoStorage
         }
-    var encryption: Encryption = ConcealEncryption("c34f5345")
+    var encryption: Encryption = ConcealEncryption("default")
         get() {
             if (field is ConcealEncryption) {
                 if (!(field as ConcealEncryption).init()) {
