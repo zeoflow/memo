@@ -24,7 +24,7 @@ open class ConcealEncryption protected constructor(
         val passwordBytes = encryptionKey.toByteArray(StandardCharsets.UTF_8)
         val length = passwordBytes.size.coerceAtMost(keyBytes.size)
         System.arraycopy(passwordBytes, 0, keyBytes, 0, length)
-        secretKey = SecretKeySpec(keyBytes, "AES")
+        secretKey = SecretKeySpec(keyBytes, "AES/GCM/NoPadding")
     }
 
     override fun encryptionKey(): String {
