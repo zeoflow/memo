@@ -9,13 +9,11 @@ import java.util.*
 import javax.crypto.*
 import javax.crypto.spec.SecretKeySpec
 
-open class ConcealEncryption protected constructor(
+open class ConcealEncryption constructor(
     private val encryptionKey: String,
-    init: Boolean
 ) : Encryption {
-    private val secretKey: SecretKey?
 
-    constructor(encryptionKey: String) : this(encryptionKey, true)
+    private val secretKey: SecretKey?
 
     init {
         val keyLength = 128
@@ -24,7 +22,7 @@ open class ConcealEncryption protected constructor(
         val passwordBytes = encryptionKey.toByteArray(StandardCharsets.UTF_8)
         val length = passwordBytes.size.coerceAtMost(keyBytes.size)
         System.arraycopy(passwordBytes, 0, keyBytes, 0, length)
-        secretKey = SecretKeySpec(keyBytes, "AES")
+        secretKey = SecretKeySpec(keyBytes, "AES/GCM/NoPadding")
     }
 
     override fun encryptionKey(): String {
@@ -37,11 +35,11 @@ open class ConcealEncryption protected constructor(
 
     @SuppressLint("GetInstance")
     @Throws(Exception::class)
-    override fun encrypt(key: String?, plainText: String): String? {
+    override fun encrypt(key: String?, value: String): String? {
         try {
             val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             cipher.init(Cipher.ENCRYPT_MODE, secretKey)
-            val cipherText = cipher.doFinal(plainText.toByteArray(StandardCharsets.UTF_8))
+            val cipherText = cipher.doFinal(value.toByteArray(StandardCharsets.UTF_8))
             return Base64.encodeToString(cipherText, Base64.NO_WRAP)
         } catch (e: NoSuchAlgorithmException) {
             e.printStackTrace()
@@ -59,11 +57,11 @@ open class ConcealEncryption protected constructor(
 
     @SuppressLint("GetInstance")
     @Throws(Exception::class)
-    override fun decrypt(key: String?, cipherText: String?): String {
+    override fun decrypt(key: String?, value: String?): String {
         val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
         cipher.init(Cipher.DECRYPT_MODE, secretKey)
         return String(
-            cipher.doFinal(Base64.decode(cipherText, Base64.NO_WRAP)),
+            cipher.doFinal(Base64.decode(value, Base64.NO_WRAP)),
             StandardCharsets.UTF_8
         )
     }
